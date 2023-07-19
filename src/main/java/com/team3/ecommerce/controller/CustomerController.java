@@ -1,5 +1,6 @@
 package com.team3.ecommerce.controller;
 
+import com.team3.ecommerce.entity.Country;
 import com.team3.ecommerce.entity.Customer;
 import com.team3.ecommerce.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -47,5 +49,9 @@ public class CustomerController {
         } else {
             return ResponseEntity.badRequest().body("Wrong Email or Password");
         }
+    }
+    @GetMapping("/list-country")
+    public ResponseEntity<List<Country>> getCountryList(){
+        return new ResponseEntity<>(customerService.listAllCountries(), HttpStatus.OK);
     }
 }
