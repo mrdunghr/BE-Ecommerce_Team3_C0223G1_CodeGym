@@ -47,5 +47,6 @@ public class CustomerService {
         customer.setVerificationCode(randomCode);
 
         customerRepository.save(customer);
-    } // đăng kí tài khoản user customer mới
+    }
+    // đăng kí tài khoản user customer mới
 }
