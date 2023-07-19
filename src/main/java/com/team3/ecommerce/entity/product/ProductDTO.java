@@ -1,10 +1,13 @@
 package com.team3.ecommerce.entity.product;
 
+
 public class ProductDTO {
 	private String name;
 	private String imagePath;
 	private float price;
-	private float cost;
+	private float cost; // tỉ giá
+
+
 
 	public ProductDTO(String name, String imagePath, float price, float cost) {
 		this.name = name;
