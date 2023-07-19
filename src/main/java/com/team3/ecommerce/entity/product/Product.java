@@ -1,7 +1,9 @@
 package com.team3.ecommerce.entity.product;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.team3.ecommerce.entity.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import javax.persistence.*;
 import java.util.*;
@@ -57,14 +59,17 @@ public class Product extends IdBasedEntity {
 	private String mainImage;
 		
 	@ManyToOne
+	@JsonIgnore
 	@JoinColumn(name = "category_id")
 	private Category category;
 	
 	@ManyToOne
+	@JsonIgnore
 	@JoinColumn(name = "shop_id")
 	private Shop shop;
 	
 	@ManyToOne
+	@JsonIgnore
 	@JoinColumn(name = "customer_id")
 	private Customer customer;
 
@@ -77,12 +82,15 @@ public class Product extends IdBasedEntity {
 	}
 
 	@ManyToOne
+	@JsonIgnore
 	@JoinColumn(name = "brand_id")	
 	private Brand brand;
-	
+
+	@JsonIgnore
 	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<ProductImage> images = new HashSet<>();
-	
+
+	@JsonIgnore
 	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<ProductDetail> details = new ArrayList<>();
 
