@@ -48,5 +48,8 @@ public class CustomerService {
 
         customerRepository.save(customer);
     }
+    public Customer findCustomerByEmail(String email) {
+        return customerRepository.findByEmail(email);
+    }
     // đăng kí tài khoản user customer mới
 }
