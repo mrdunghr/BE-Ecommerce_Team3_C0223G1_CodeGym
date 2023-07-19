@@ -59,6 +59,7 @@ public class Product extends IdBasedEntity {
 	private String mainImage;
 		
 	@ManyToOne
+
 	@JoinColumn(name = "category_id")
 	private Category category;
 	
