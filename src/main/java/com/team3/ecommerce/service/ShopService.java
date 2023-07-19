@@ -37,6 +37,7 @@ public class ShopService {
         shop.setCustomer(customer);
         Shop updateShop = shopRepository.save(shop);
         return updateShop;
+
     }
 
     // tìm kiếm shop
