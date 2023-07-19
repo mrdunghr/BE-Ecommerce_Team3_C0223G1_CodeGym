@@ -18,19 +18,13 @@ public class ShopService {
     private IShopRepository shopRepository;
 
 
-    // phân trang
-//    public Page<Shop> findAll(Pageable pageable) {
-//        return shopRepository.findAll(pageable);
-//    }
+
 
     public Iterable<Shop> findAllShop(){
         return shopRepository.findAll();
     }
 
-    //tạo shop
-//    public Shop saveShop(Shop shop, Customer customer) {
-//        return shopRepository.save(shop,customer);
-//    }
+
     public Shop createShop(Shop shop, Customer customer) {
 
         shop.setCreatedTime(new Date());
@@ -46,10 +40,7 @@ public class ShopService {
         return shopRepository.findById(id);
     }
 
-    // xóa shop
-    public void removeShop(Integer id){
-        shopRepository.deleteById(id);
-    }
+
 
 
 }
