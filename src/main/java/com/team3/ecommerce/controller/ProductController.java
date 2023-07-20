@@ -27,7 +27,7 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
-    // Thêm mới 1 sản phẩm
+
     @Autowired
     private ShopService shopService;
     @Autowired
@@ -47,9 +47,9 @@ public class ProductController {
         return new ResponseEntity<>(productService.findAll(), HttpStatus.OK);
     }
 
-     // hiển thị chi tiết sản phẩm
+    // hiển thị chi tiết sản phẩm
     @GetMapping("/detail/{id}")
-    public ResponseEntity<Product> detailProduct(@PathVariable Integer id){
+    public ResponseEntity<Product> detailProduct(@PathVariable Integer id) {
         Optional<Product> productOptional = productService.findById(id);
         if (!productOptional.isPresent()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -139,7 +139,4 @@ public class ProductController {
         // Trả về mã trạng thái 200 OK
         return ResponseEntity.ok().build();
     }
-
-
-
 }

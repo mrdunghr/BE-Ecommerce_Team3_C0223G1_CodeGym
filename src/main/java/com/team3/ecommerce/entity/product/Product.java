@@ -167,6 +167,7 @@ public class Product extends IdBasedEntity {
 
 	public void setInStock(boolean inStock) {
 		this.inStock = inStock;
+
 	}
 
 	public float getCost() {
