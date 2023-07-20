@@ -33,10 +33,6 @@ public class ProductController {
     @Autowired
     BrandService brandService;
 
-
-    @Autowired
-    private ShopService shopService;
-
     // thêm sản phẩm
     @PostMapping("/add")
     public ResponseEntity<Product> createProduct(@RequestBody Product product) {
