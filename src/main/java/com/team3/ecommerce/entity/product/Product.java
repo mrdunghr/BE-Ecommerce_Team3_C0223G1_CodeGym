@@ -31,7 +31,7 @@ public class Product extends IdBasedEntity {
 	private Date updatedTime;
 	
 	private boolean enabled;
-	
+
 	@Column(name = "in_stock")
 	private boolean inStock;
 	
@@ -167,6 +167,9 @@ public class Product extends IdBasedEntity {
 
 	public void setInStock(boolean inStock) {
 		this.inStock = inStock;
+		if (!inStock) {
+			this.enabled = false;
+		}
 	}
 
 	public float getCost() {

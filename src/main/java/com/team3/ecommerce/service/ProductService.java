@@ -3,6 +3,7 @@ package com.team3.ecommerce.service;
 import com.team3.ecommerce.entity.Brand;
 import com.team3.ecommerce.entity.Category;
 import com.team3.ecommerce.entity.Shop;
+import com.team3.ecommerce.entity.Shop;
 import com.team3.ecommerce.entity.product.Product;
 import com.team3.ecommerce.repository.CategoryRepository;
 import com.team3.ecommerce.repository.IShopRepository;
@@ -37,6 +38,13 @@ public class ProductService{
 
     public void remove(Integer id) {
         iProductRepository.deleteById(id);
+    }
+
+    // tìm kiếm sản phẩm theo id của 1 shop
+    public Optional<Product> findProductsInShopByIdProducts(Integer idProducts, Shop shop){
+
+            return iProductRepository.findProductsInShopByIdProducts(idProducts,shop);
+
     }
 
     //Toàn bộ sản phẩm của 1 shop: theo các tiêu chí
