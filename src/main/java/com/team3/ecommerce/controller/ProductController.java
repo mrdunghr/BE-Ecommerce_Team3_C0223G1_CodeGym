@@ -15,16 +15,20 @@ import java.util.Optional;
 public class ProductController {
     @Autowired
     private ProductService productService;
+
+    // Thêm mới 1 sản phẩm
     @PostMapping("/add")
     public ResponseEntity<Product> createProduct(@RequestBody Product product) {
         return new ResponseEntity<>(productService.save(product), HttpStatus.CREATED);
     }
 
+    // Hiển thị danh sách sản phẩm
     @GetMapping("/all")
     public ResponseEntity<Iterable<Product>> allProduct() {
         return new ResponseEntity<>(productService.findAll(), HttpStatus.OK);
     }
 
+    // Chi tiêết sản phẩm
     @GetMapping("/detail/{id}")
     public ResponseEntity<Product> detailProduct(@PathVariable Integer id){
         Optional<Product> productOptional = productService.findById(id);
@@ -32,5 +36,16 @@ public class ProductController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(productOptional.get(), HttpStatus.OK);
+    }
+
+    // Sửa sản phẩm
+    @PutMapping("/edit/{id}")
+    public ResponseEntity<Product> updateProduct(@PathVariable Integer id, @RequestBody Product products) {
+        if (this.productService.findById(id).isPresent()) {
+            products.setId(id);
+            this.productService.save(products);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 }
