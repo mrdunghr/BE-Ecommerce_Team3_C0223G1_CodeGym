@@ -58,40 +58,54 @@ public class ProductController {
 
     // Hiển thị danh sách sản phẩm trong 1 shop theo các tiêu chí: tìm theo tên, tìm theo category, tìm theo brand
     @GetMapping("/shop/{idShop}")
-    public ResponseEntity<Iterable<Product>> findProductByShop(@PathVariable Integer idShop,
+    public ResponseEntity<?> findProductByShop(@PathVariable Integer idShop,
                                                                @RequestParam(value = "keyword", required = false) String keyword,
                                                                @RequestParam(value = "idCategory", required = false) Integer idCategory,
                                                                @RequestParam(value = "idBrand", required = false) Integer idBrand,
-                                                               @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
-        Optional<Shop> shop = shopService.findByIdShop(idShop);
-        if (shop != null && shop.isPresent()) {
-            if (idCategory != null) {
-                Category category = categoryService.findCategoryById(idCategory).get();
-                if (idBrand != null) {
-                    Brand brand = brandService.findBrandById(idBrand).get();
-                    Pageable pageable = PageRequest.of(page, size);
-                    Page<Product> products = productService.findByShop(shop.get(), keyword, category, brand, pageable);
-                    return new ResponseEntity<>(products, HttpStatus.OK);
-                } else {
-                    Pageable pageable = PageRequest.of(page, size);
-                    Page<Product> products = productService.findByShop(shop.get(), keyword, category, null, pageable);
-                    return new ResponseEntity<>(products, HttpStatus.OK);
-                }
-            } else {
-                if (idBrand != null) {
-                    Brand brand = brandService.findBrandById(idBrand).get();
-                    Pageable pageable = PageRequest.of(page, size);
-                    Page<Product> products = productService.findByShop(shop.get(), keyword, null, brand, pageable);
-                    return new ResponseEntity<>(products, HttpStatus.OK);
-                } else {
-                    Pageable pageable = PageRequest.of(page, size);
-                    Page<Product> products = productService.findByShop(shop.get(), keyword, null, null, pageable);
-                    return new ResponseEntity<>(products, HttpStatus.OK);
-                }
-            }
+                                                               @RequestParam(defaultValue = "0") int page,
+                                                               @RequestParam(defaultValue = "1") int size) {
+
+        Optional<Shop> shopOptional = shopService.findByIdShop(idShop);
+        if (!shopOptional.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+        Shop shop = shopOptional.get();
+        Category category = null;
+        Brand brand = null;
+
+        if (idCategory != null) {
+            Optional<Category> categoryOptional = categoryService.findCategoryById(idCategory);
+            if (!categoryOptional.isPresent()) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+            category = categoryOptional.get();
+        }
+
+        if (idBrand != null) {
+            Optional<Brand> brandOptional = brandService.findBrandById(idBrand);
+            if (!brandOptional.isPresent()) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+            brand = brandOptional.get();
+        }
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Product> products;
+
+        if (keyword != null && !keyword.isEmpty()) {
+            products = productService.findByShop(shop, keyword, category, brand, pageable);
+        } else {
+            products = productService.findByShop(shop, null, category, brand, pageable);
+        }
+
+        if (products.isEmpty()) {
+            return new ResponseEntity<>("Không tìm thấy sản phẩm ... vui lòng cập nhật giỏ hàng", HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(products, HttpStatus.OK);
     }
+
 
     // ngừng bán sản phẩm của 1 shop
     @PutMapping("/{productId}/stop-product-shop/{shopId}")

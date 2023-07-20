@@ -26,6 +26,7 @@ public interface ProductRepository extends JpaRepository<Product,Integer> {
     @Query("SELECT p FROM Product p WHERE p.id = :idProducts AND p.shop = :Shop")
     Optional<Product> findProductsInShopByIdProducts(@Param("idProducts") Integer idProducts, @Param("Shop") Shop shop);
 
+//    @Query("SELECT p FROM Product p WHERE p.name LIKE %:keyword% OR p.alias LIKE%:keyword%")
     @Query("SELECT p FROM Product p WHERE p.shop = :shop AND" +
             "(:keyword IS NULL OR (p.name LIKE %:keyword% OR p.alias LIKE %:keyword%)) AND " +
             "(:category IS NULL OR p.category = :category) AND " +
