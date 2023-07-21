@@ -1,5 +1,6 @@
 package com.team3.ecommerce.controller;
 
+import com.team3.ecommerce.entity.ChangePasswordRequest;
 import com.team3.ecommerce.entity.Country;
 import com.team3.ecommerce.entity.Customer;
 import com.team3.ecommerce.service.CustomerService;
@@ -53,5 +54,20 @@ public class CustomerController {
     @GetMapping("/list-country")
     public ResponseEntity<List<Country>> getCountryList(){
         return new ResponseEntity<>(customerService.listAllCountries(), HttpStatus.OK);
+    }
+
+    //đổi mật khẩu của của Customer
+    @PutMapping("/edit-password/{idCustomer}")
+    public ResponseEntity<?> editPassword(@PathVariable Integer idCustomer, @RequestBody ChangePasswordRequest request){
+        Optional<Customer> customer1 = customerService.findById(idCustomer);
+        if(!customer1.isPresent()){
+            return ResponseEntity.notFound().build();
+        }
+        if (!customer1.get().getPassword().equals(request.getOldPassword())) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Incorrect old password");
+        }
+        customer1.get().setPassword(request.getNewPassword());
+        customerService.saveCustomer(customer1.get());
+        return ResponseEntity.ok("Password changed successfully");
     }
 }
