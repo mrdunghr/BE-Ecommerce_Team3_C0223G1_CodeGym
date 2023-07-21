@@ -40,6 +40,11 @@ public class ShopService {
         return shopRepository.findById(id);
     }
 
+    // update shop
+    public Shop updateShop(Shop shop){
+        return shopRepository.save(shop);
+    }
+
 
 
 
