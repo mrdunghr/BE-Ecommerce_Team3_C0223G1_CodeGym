@@ -57,4 +57,8 @@ public class CustomerService {
     public Optional<Customer> findById(Integer id){
         return customerRepository.findById(id);
     }
+
+    public Customer saveCustomer(Customer customer){
+        return customerRepository.save(customer);
+    }
 }

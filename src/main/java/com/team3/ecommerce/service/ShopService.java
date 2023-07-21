@@ -20,8 +20,8 @@ public class ShopService {
 
 
 
-    public Iterable<Shop> findAllShop(){
-        return shopRepository.findAll();
+    public Page<Shop> findAllShop(Pageable pageable){
+        return shopRepository.findAll(pageable);
     }
 
 
