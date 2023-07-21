@@ -54,4 +54,14 @@ public class CustomerController {
     public ResponseEntity<List<Country>> getCountryList(){
         return new ResponseEntity<>(customerService.listAllCountries(), HttpStatus.OK);
     }
+
+    //đổi mật khẩu của của Customer
+    @PutMapping("/edit-password/{idCustomer")
+    public ResponseEntity<?> editPassword(@PathVariable Integer idCustomer,@RequestBody Customer customer){
+        Optional<Customer> customer1 = customerService.findById(idCustomer);
+        if(!customer1.isPresent()){
+            return ResponseEntity.notFound().build();
+        }
+        if()
+    }
 }

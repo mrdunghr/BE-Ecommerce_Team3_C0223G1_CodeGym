@@ -52,4 +52,9 @@ public class CustomerService {
         return customerRepository.findByEmail(email);
     }
     // đăng kí tài khoản user customer mới
+
+    // tìm kiếm Customer theo id
+    public Optional<Customer> findById(Integer id){
+        return customerRepository.findById(id);
+    }
 }
