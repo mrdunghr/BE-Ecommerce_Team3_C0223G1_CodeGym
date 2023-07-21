@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class CategoryController {
     @Autowired
     CategoryService categoryService;
+
     // Lấy ra list category
     @GetMapping("")
     public ResponseEntity<Iterable<Category>> showAllCategory() {
