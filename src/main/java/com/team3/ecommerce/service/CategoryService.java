@@ -14,7 +14,7 @@ public class CategoryService {
     @Autowired
     CategoryRepository categoryRepository;
 
-    public Optional<Category> findCategoryById(Integer id){
+    public Optional<Category> findCategoryById(Integer id) {
         return categoryRepository.findById(id);
     }
 }

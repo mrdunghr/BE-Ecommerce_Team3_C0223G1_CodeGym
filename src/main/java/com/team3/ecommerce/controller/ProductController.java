@@ -3,7 +3,6 @@ package com.team3.ecommerce.controller;
 import com.team3.ecommerce.entity.Brand;
 import com.team3.ecommerce.entity.Category;
 import com.team3.ecommerce.entity.Shop;
-import com.team3.ecommerce.entity.Shop;
 import com.team3.ecommerce.entity.product.Product;
 import com.team3.ecommerce.service.BrandService;
 import com.team3.ecommerce.service.CategoryService;
@@ -13,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.relational.core.sql.In;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -70,11 +68,11 @@ public class ProductController {
     // Hiển thị danh sách sản phẩm trong 1 shop theo các tiêu chí: tìm theo tên, tìm theo category, tìm theo brand
     @GetMapping("/shop/{idShop}")
     public ResponseEntity<?> findProductByShop(@PathVariable Integer idShop,
-                                                               @RequestParam(value = "keyword", required = false) String keyword,
-                                                               @RequestParam(value = "idCategory", required = false) Integer idCategory,
-                                                               @RequestParam(value = "idBrand", required = false) Integer idBrand,
-                                                               @RequestParam(defaultValue = "0") int page,
-                                                               @RequestParam(defaultValue = "1") int size) {
+                                               @RequestParam(value = "keyword", required = false) String keyword,
+                                               @RequestParam(value = "idCategory", required = false) Integer idCategory,
+                                               @RequestParam(value = "idBrand", required = false) Integer idBrand,
+                                               @RequestParam(defaultValue = "0") int page,
+                                               @RequestParam(defaultValue = "1") int size) {
 
         Optional<Shop> shopOptional = shopService.findByIdShop(idShop);
         if (!shopOptional.isPresent()) {
@@ -150,8 +148,8 @@ public class ProductController {
 
     // hiển thị 5 sản phẩm bán chạy nhất
     @GetMapping("/list-product-discount")
-    public ResponseEntity<Iterable<Product>> listProduct(){
-        Iterable<Product> products= productService.findTop5ByOrderByDiscountPercent();
-        return new ResponseEntity<>(products,HttpStatus.OK);
+    public ResponseEntity<Iterable<Product>> listProduct() {
+        Iterable<Product> products = productService.findTop5ByOrderByDiscountPercent();
+        return new ResponseEntity<>(products, HttpStatus.OK);
     }
 }

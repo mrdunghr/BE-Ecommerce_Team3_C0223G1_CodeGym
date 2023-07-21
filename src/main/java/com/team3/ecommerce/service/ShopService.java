@@ -18,9 +18,7 @@ public class ShopService {
     private IShopRepository shopRepository;
 
 
-
-
-    public Page<Shop> findAllShop(Pageable pageable){
+    public Page<Shop> findAllShop(Pageable pageable) {
         return shopRepository.findAll(pageable);
     }
 
@@ -36,16 +34,14 @@ public class ShopService {
     }
 
     // tìm kiếm shop
-    public Optional<Shop> findByIdShop(Integer id){
+    public Optional<Shop> findByIdShop(Integer id) {
         return shopRepository.findById(id);
     }
 
     // update shop
-    public Shop updateShop(Shop shop){
+    public Shop updateShop(Shop shop) {
         return shopRepository.save(shop);
     }
-
-
 
 
 }
