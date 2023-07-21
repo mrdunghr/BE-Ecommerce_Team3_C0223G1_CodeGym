@@ -20,8 +20,8 @@ public class ShopService {
 
 
 
-    public Iterable<Shop> findAllShop(){
-        return shopRepository.findAll();
+    public Page<Shop> findAllShop(Pageable pageable){
+        return shopRepository.findAll(pageable);
     }
 
 
@@ -38,6 +38,11 @@ public class ShopService {
     // tìm kiếm shop
     public Optional<Shop> findByIdShop(Integer id){
         return shopRepository.findById(id);
+    }
+
+    // update shop
+    public Shop updateShop(Shop shop){
+        return shopRepository.save(shop);
     }
 
 

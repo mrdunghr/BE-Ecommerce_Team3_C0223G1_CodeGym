@@ -16,6 +16,5 @@ public class AccountUserService {
     // hiển thị toàn bộ tài khoản User
     public Page<User> listUsers(Pageable pageable){
         return accountUserRepository.findAll(pageable);
-
     }
 }
