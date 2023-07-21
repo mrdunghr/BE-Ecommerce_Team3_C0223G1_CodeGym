@@ -26,8 +26,6 @@ import java.util.Optional;
 public class ProductController {
     @Autowired
     private ProductService productService;
-
-
     @Autowired
     private ShopService shopService;
     @Autowired
@@ -132,26 +130,28 @@ public class ProductController {
             // Nếu không tồn tại, trả về mã trạng thái 404 Not Found
             return ResponseEntity.notFound().build();
         }
-
         // Kiểm tra xem các tham số truyền vào có đầy đủ hay không
         if (productId == null || shopId == null) {
             // Nếu thiếu tham số, trả về mã trạng thái 400 Bad Request
             return ResponseEntity.badRequest().build();
         }
-
         // Tìm kiếm sản phẩm trong cửa hàng
         Optional<Product> product = productService.findProductsInShopByIdProducts(productId, shop1.get());
         if (!product.isPresent()) {
             // Nếu sản phẩm không tồn tại, trả về mã trạng thái 404 Not Found
             return ResponseEntity.notFound().build();
         }
-
         // Cập nhật trạng thái sản phẩm và lưu vào cơ sở dữ liệu
         product.get().setInStock(false);
         productService.save(product.get());
-
         // Trả về mã trạng thái 200 OK
         return ResponseEntity.ok().build();
+    }
 
+    // hiển thị 5 sản phẩm bán chạy nhất
+    @GetMapping("/list-product-discount")
+    public ResponseEntity<Iterable<Product>> listProduct(){
+        Iterable<Product> products= productService.findTop5ByOrderByDiscountPercent();
+        return new ResponseEntity<>(products,HttpStatus.OK);
     }
 }
