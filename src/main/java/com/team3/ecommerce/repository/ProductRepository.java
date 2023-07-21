@@ -35,4 +35,7 @@ public interface ProductRepository extends JpaRepository<Product,Integer> {
                                                           @Param("keyword") String keyword,
                                                           @Param("category") Category category,
                                                           @Param("brand")Brand brand,Pageable pageable);
+
+    @Query("SELECT p FROM Product p ORDER BY p.averageRating DESC LIMIT 5")
+    Iterable<Product> showTopProductsRating();
 }

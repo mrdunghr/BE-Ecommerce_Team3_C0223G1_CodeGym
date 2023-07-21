@@ -55,4 +55,9 @@ public class ProductService{
             return null;
         }
     }
+
+    // hiển thị 5 sản phẩm bán chạy nhất
+    public Iterable<Product> showTopProductsRating(){
+        return iProductRepository.showTopProductsRating();
+    }
 }
