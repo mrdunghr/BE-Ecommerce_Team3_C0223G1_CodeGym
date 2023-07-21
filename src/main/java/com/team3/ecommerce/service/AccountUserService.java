@@ -7,6 +7,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class AccountUserService {
     @Autowired
@@ -19,5 +21,9 @@ public class AccountUserService {
 
     public User findUserByEmail(String email) {
         return accountUserRepository.findByEmail(email);
+    }
+
+    public List<User> listAll(){
+        return accountUserRepository.findAll();
     }
 }
