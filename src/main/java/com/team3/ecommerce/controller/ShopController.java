@@ -35,6 +35,18 @@ public class ShopController {
         return new ResponseEntity<>(shopService.createShop(shop,customer),HttpStatus.OK);
     }
 
+    // chỉnh sửa thông tin của shop
+    @PutMapping("/edit-shop/{shopId}")
+    public ResponseEntity<Optional<Shop>> editShop(@PathVariable Integer shopId,@RequestBody Shop shop){
+        Optional<Shop> shop1= shopService.findByIdShop(shopId);
+        if(!shop1.isPresent()){
+               return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+       shop.setId(shop1.get().getId());
+        shopService.updateShop(shop);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
 
 
 }
