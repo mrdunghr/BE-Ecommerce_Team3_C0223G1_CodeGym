@@ -17,4 +17,8 @@ public class CategoryService {
     public Optional<Category> findCategoryById(Integer id) {
         return categoryRepository.findById(id);
     }
+
+    public Iterable<Category> findAllCategory() {
+        return categoryRepository.findAll();
+    }
 }
