@@ -19,7 +19,7 @@ public class UserController {
     private AccountUserService accountUserService;
 
     // đăng nhập user
-    @GetMapping("/login")
+    @PostMapping("/login")
     public ResponseEntity<?> LoginUser(@RequestBody User user) {
         User user1 = accountUserService.findUserByEmail(user.getEmail());
         if (user1 != null && user1.getPassword().equals(user.getPassword())) {
