@@ -25,6 +25,7 @@ public class CustomerService {
     public Optional<Customer> getCustomerById(Integer id) {
         return customerRepository.findById(id);
     }// lấy ra một customer
+
     public List<Country> listAllCountries() {
         return countryRepository.findAllByOrderByNameAsc();
     } // danh sách quốc gia
@@ -48,8 +49,18 @@ public class CustomerService {
 
         customerRepository.save(customer);
     }
+
     public Customer findCustomerByEmail(String email) {
         return customerRepository.findByEmail(email);
     }
     // đăng kí tài khoản user customer mới
+
+    // tìm kiếm Customer theo id
+    public Optional<Customer> findById(Integer id) {
+        return customerRepository.findById(id);
+    }
+
+    public Customer saveCustomer(Customer customer) {
+        return customerRepository.save(customer);
+    }
 }

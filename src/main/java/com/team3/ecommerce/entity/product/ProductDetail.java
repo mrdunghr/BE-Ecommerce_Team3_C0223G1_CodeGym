@@ -1,6 +1,8 @@
 package com.team3.ecommerce.entity.product;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.team3.ecommerce.entity.IdBasedEntity;
 
 import javax.persistence.*;
@@ -16,6 +18,7 @@ public class ProductDetail extends IdBasedEntity {
 	private String value;
 	
 	@ManyToOne
+	@JsonIgnore
 	@JoinColumn(name = "product_id")
 	private Product product;
 

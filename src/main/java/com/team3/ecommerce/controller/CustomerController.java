@@ -17,6 +17,7 @@ import java.util.Optional;
 public class CustomerController {
     @Autowired
     private CustomerService customerService;
+
     @GetMapping("/{id}")
     public ResponseEntity<Customer> getCustomerById(@PathVariable Integer id) {
         Optional<Customer> customer = customerService.getCustomerById(id);
@@ -26,6 +27,7 @@ public class CustomerController {
             return ResponseEntity.notFound().build();
         }
     }
+
     @GetMapping("/check-email")
     public ResponseEntity<Boolean> isEmailUnique(@RequestParam String email) {
         boolean isUnique = customerService.isEmailUnique(email);
@@ -42,6 +44,7 @@ public class CustomerController {
         customerService.registerCustomer(customer);
         return ResponseEntity.ok("Registration successful.");
     }
+
     @PostMapping("/login")
     public ResponseEntity<?> LoginCustomer(@RequestBody Customer customer) {
         Customer customer1 = customerService.findCustomerByEmail(customer.getEmail());
@@ -51,8 +54,9 @@ public class CustomerController {
             return ResponseEntity.badRequest().body("Wrong Email or Password");
         }
     }
+
     @GetMapping("/list-country")
-    public ResponseEntity<List<Country>> getCountryList(){
+    public ResponseEntity<List<Country>> getCountryList() {
         return new ResponseEntity<>(customerService.listAllCountries(), HttpStatus.OK);
     }
 }
