@@ -152,4 +152,12 @@ public class ProductController {
         Iterable<Product> products = productService.findTop5ByOrderByDiscountPercent();
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
+
+    // hiển thị tất cả sản phẩm của customer
+    @GetMapping("/customer-list/{customerId}")
+    public Page<Product> getAllProductsByCustomerId(@PathVariable Integer customerId,
+                                                    @RequestParam(defaultValue = "0") Integer page,
+                                                    @RequestParam(defaultValue = "10") Integer size) {
+        return productService.getAllProductsByCustomerId(customerId, page, size);
+    }
 }
