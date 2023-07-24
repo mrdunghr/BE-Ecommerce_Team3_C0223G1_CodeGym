@@ -59,4 +59,5 @@ public class CustomerController {
     public ResponseEntity<List<Country>> getCountryList() {
         return new ResponseEntity<>(customerService.listAllCountries(), HttpStatus.OK);
     }
+
 }

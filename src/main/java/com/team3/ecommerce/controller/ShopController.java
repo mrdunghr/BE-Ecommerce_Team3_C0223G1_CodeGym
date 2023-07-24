@@ -66,5 +66,19 @@ public class ShopController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    // lấy dánh sách shop của customer
+    @GetMapping("/{customer_id}")
+    public ResponseEntity<?> findShopByCustomer(@PathVariable Integer customer_id,
+                                                @RequestParam(defaultValue = "0") int page,
+                                                @RequestParam(defaultValue = "5") int size) {
+        Customer customer = customerService.getCustomerById(customer_id).orElse(null);
+        if (customer != null && customer.isEnabled()) {
+            Pageable pageable = PageRequest.of(page, size);
+            Page<Shop> shops = shopService.findShopByCustomer(customer, pageable);
+            return new ResponseEntity<>(shops, HttpStatus.OK);
+        } else {
+            return ResponseEntity.badRequest().body("tài khoản không tồn tại hoặc bị vô hiệu hóa");
+        }
+    }
 
 }
