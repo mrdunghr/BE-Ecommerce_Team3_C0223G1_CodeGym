@@ -43,5 +43,7 @@ public class ShopService {
         return shopRepository.save(shop);
     }
 
-
+    public Page<Shop> findShopByCustomer(Customer customer, Pageable pageable){
+        return shopRepository.findShopByCustomer(customer, pageable);
+    }
 }
