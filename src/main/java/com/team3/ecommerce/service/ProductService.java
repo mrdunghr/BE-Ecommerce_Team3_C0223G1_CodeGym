@@ -54,6 +54,6 @@ public class ProductService {
 
     // hiển thị 5 sản phẩm bán chạy nhất
     public Iterable<Product> findTop5ByOrderByDiscountPercent() {
-        return iProductRepository.findTop5ByOrderByDiscountPercent();
+        return iProductRepository.findTop5ByOrderByDiscountPercentDesc();
     }
 }
