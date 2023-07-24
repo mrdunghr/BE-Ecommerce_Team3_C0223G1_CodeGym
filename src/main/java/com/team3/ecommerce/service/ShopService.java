@@ -23,13 +23,13 @@ public class ShopService {
     }
 
 
-    public Shop createShop(Shop shop, Customer customer) {
-
-        shop.setCreatedTime(new Date());
-        shop.setEnabled(true);
-        shop.setCustomer(customer);
-        Shop updateShop = shopRepository.save(shop);
-        return updateShop;
+    public Shop createShop(Shop shop) {
+//
+//        shop.setCreatedTime(new Date());
+//        shop.setEnabled(true);
+//        shop.setCustomer(customer);
+//        Shop updateShop = shopRepository.save(shop);
+        return shopRepository.save(shop);
 
     }
 
