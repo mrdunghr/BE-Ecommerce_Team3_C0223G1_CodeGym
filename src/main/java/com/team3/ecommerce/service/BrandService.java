@@ -10,9 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.HashSet;
 import java.util.Optional;
-import java.util.Set;
 
 @Service
 @Transactional
@@ -33,5 +31,15 @@ public class BrandService {
         } else {
             throw new IllegalArgumentException("Not found or does not exist");
         }
+    }
+
+    // hiển thị list Brand
+    public Iterable<Brand> showBrandList() {
+        return brandRepository.findAll();
+    }
+
+    // hiển thị page Brand
+    public Page<Brand> showBrandPage(Pageable pageable){
+        return brandRepository.findAll(pageable);
     }
 }

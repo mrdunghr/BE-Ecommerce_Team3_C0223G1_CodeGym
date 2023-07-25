@@ -1,10 +1,8 @@
 package com.team3.ecommerce.entity.product;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.team3.ecommerce.entity.*;
-import org.springframework.web.bind.annotation.CrossOrigin;
 
 import javax.persistence.*;
 import java.util.*;
