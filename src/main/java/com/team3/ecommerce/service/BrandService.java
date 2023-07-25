@@ -32,9 +32,13 @@ public class BrandService {
             throw new IllegalArgumentException("Not found or does not exist");
         }
     }
+
+    // hiển thị list Brand
     public Iterable<Brand> showBrandList() {
         return brandRepository.findAll();
     }
+
+    // hiển thị page Brand
     public Page<Brand> showBrandPage(Pageable pageable){
         return brandRepository.findAll(pageable);
     }
