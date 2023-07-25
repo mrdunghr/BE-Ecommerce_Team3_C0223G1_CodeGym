@@ -65,7 +65,4 @@ public class ShopController {
         shopService.updateShop(shop);
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
-
-
 }
