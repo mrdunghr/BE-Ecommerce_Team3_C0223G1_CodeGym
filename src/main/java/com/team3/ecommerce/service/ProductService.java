@@ -7,6 +7,7 @@ import com.team3.ecommerce.entity.product.Product;
 import com.team3.ecommerce.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -54,6 +55,12 @@ public class ProductService {
 
     // hiển thị 5 sản phẩm bán chạy nhất
     public Iterable<Product> findTop5ByOrderByDiscountPercent() {
-        return iProductRepository.findTop5ByOrderByDiscountPercent();
+        return iProductRepository.findTop5ByOrderByDiscountPercentDesc();
+    }
+
+    // hiển thị danh sách product của customer
+    public Page<Product> getAllProductsByCustomerId(Integer customerId, Integer page, Integer size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return iProductRepository.findByCustomerId(customerId, pageable);
     }
 }

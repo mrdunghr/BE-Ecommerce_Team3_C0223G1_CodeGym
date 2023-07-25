@@ -36,6 +36,9 @@ public interface ProductRepository extends JpaRepository<Product,Integer> {
                                                           @Param("category") Category category,
                                                           @Param("brand")Brand brand,Pageable pageable);
 
-    @Query("SELECT p FROM Product p ORDER BY p.discountPercent DESC")
-    Iterable<Product> findTop5ByOrderByDiscountPercent();
+
+    Iterable<Product> findTop5ByOrderByDiscountPercentDesc();
+
+    // hiển thị danh sách product của customer
+    Page<Product> findByCustomerId(Integer customerId, Pageable pageable);
 }
