@@ -161,29 +161,9 @@ public class ProductController {
 
     // sửa ảnh product
     @PutMapping("/{productId}/update-images")
-//    public ResponseEntity<String> updateProductImages(@PathVariable Integer productId,
-//                                                      @RequestBody Map<String, Object> imageInfo) {
-//        String mainImage = (String) imageInfo.get("mainImage");
-//        List<String> images = (List<String>) imageInfo.get("images");
-//        Optional<Product> product = productService.findById(productId);
-//        // Cập nhật ảnh chính của sản phẩm
-//        product.get().setMainImage(mainImage);
-//        productService.save(product.get());
-//
-//        // Xóa tất cả các ảnh phụ của sản phẩm trong database
-//        productService.deleteByProductAndType(product);
-//
-//        // Thêm các ảnh mới vào sản phẩm
-//        List<ProductImage> productImages = new ArrayList<>();
-//        for (String imageName : images) {
-//            ProductImage productImage = new ProductImage();
-//            productImage.setProduct(product.get());
-//            productImage.setName(imageName);
-//
-//            productImages.add(productImage);
-//        }
-//        productService.save(productImages);
-//
-//        return ResponseEntity.ok("Product images updated successfully");
-//    }
+   public ResponseEntity<Product> updateProductImages(@PathVariable Integer productId,
+                                                      @RequestBody Map<String, Object> imageInfo) {
+        Product product = productService.updateProductImages(productId, imageInfo);
+        return ResponseEntity.ok().body(product);
+    }
 }
