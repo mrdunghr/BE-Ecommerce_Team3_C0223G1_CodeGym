@@ -22,6 +22,9 @@ import java.util.Optional;
 @Repository
 @Transactional
 public interface ProductRepository extends JpaRepository<Product,Integer> {
+
+    // check tên sản phẩm
+    boolean existsByNameOrAlias(String name, String alias);
     // tìm kiếm sản phẩm của 1 shop
     @Query("SELECT p FROM Product p WHERE p.id = :idProducts AND p.shop = :Shop")
     Optional<Product> findProductsInShopByIdProducts(@Param("idProducts") Integer idProducts, @Param("Shop") Shop shop);
