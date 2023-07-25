@@ -27,9 +27,6 @@ public class AccountUserService {
         return accountUserRepository.findAll();
     }
     public User createUser(User user) {
-        user.setEnabled(true);
-        user.setPassword("123456");
-        user.setPhotos(null);
         return accountUserRepository.save(user);
     }
 }
