@@ -12,6 +12,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.Instant;
+import java.util.Date;
 import java.util.Optional;
 
 @Service
@@ -30,6 +32,18 @@ public class ProductService {
     }
 
     public Product save(Product product) {
+        // Kiểm tra xem sản phẩm có cùng tên đã tồn tại hay chưa
+        boolean existsWithNameOrAlias = iProductRepository.existsByNameOrAlias(product.getName(), product.getAlias());
+        if (existsWithNameOrAlias) {
+            throw new IllegalArgumentException("Product name or Alias must be unique");
+        }
+        product.setEnabled(true);
+        product.setCreatedTime(Date.from(Instant.now()));
+        product.setInStock(true);
+        product.setAverageRating(0);
+        product.setDiscountPercent(0);
+        product.setMainImage("");
+        product.setReviewCount(0);
         return iProductRepository.save(product);
     }
 
