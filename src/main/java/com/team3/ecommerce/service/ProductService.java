@@ -13,8 +13,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.Instant;
-import java.util.Date;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @Transactional
@@ -70,5 +69,22 @@ public class ProductService {
     public Page<Product> getAllProductsByCustomerId(Integer customerId, Integer page, Integer size) {
         Pageable pageable = PageRequest.of(page, size);
         return iProductRepository.findByCustomerId(customerId, pageable);
+    }
+
+    // hiển thị tất cả ảnh của sản phẩm
+    public Map<String, Object> getProductWithImages(Integer productId) {
+        List<Object[]> results = iProductRepository.findProductImages(productId);
+        Map<String, Object> productWithImages = new HashMap<>();
+        for (Object[] result : results) {
+            String mainImage = (String) result[0];
+            String imageName = (String) result[1];
+            if (!productWithImages.containsKey("mainImage")) {
+                productWithImages.put("mainImage", mainImage);
+            }
+            List<String> images = (List<String>) productWithImages.getOrDefault("images", new ArrayList<>());
+            images.add(imageName);
+            productWithImages.put("images", images);
+        }
+        return productWithImages;
     }
 }
