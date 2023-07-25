@@ -160,4 +160,5 @@ public class ProductController {
                                                     @RequestParam(defaultValue = "10") Integer size) {
         return productService.getAllProductsByCustomerId(customerId, page, size);
     }
+
 }
