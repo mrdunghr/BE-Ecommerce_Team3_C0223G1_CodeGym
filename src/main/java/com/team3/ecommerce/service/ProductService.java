@@ -51,12 +51,6 @@ public class ProductService {
         iProductRepository.deleteById(id);
     }
 
-    // tìm kiếm sản phẩm theo id của 1 shop
-    public Optional<Product> findProductsInShopByIdProducts(Integer idProducts, Shop shop) {
-
-        return iProductRepository.findProductsInShopByIdProducts(idProducts, shop);
-
-    }
 
     //Toàn bộ sản phẩm của 1 shop: theo các tiêu chí
     public Page<Product> findByShop(Shop shop, String keyword, Category category, Brand brand, Pageable pageable) {
