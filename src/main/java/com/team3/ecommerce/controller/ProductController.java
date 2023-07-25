@@ -4,6 +4,7 @@ import com.team3.ecommerce.entity.Brand;
 import com.team3.ecommerce.entity.Category;
 import com.team3.ecommerce.entity.Shop;
 import com.team3.ecommerce.entity.product.Product;
+import com.team3.ecommerce.entity.product.ProductImage;
 import com.team3.ecommerce.service.BrandService;
 import com.team3.ecommerce.service.CategoryService;
 import com.team3.ecommerce.service.ProductService;
@@ -16,6 +17,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @CrossOrigin("*")
@@ -118,21 +122,36 @@ public class ProductController {
 
     // ngừng bán sản phẩm của 1 shop
     @PutMapping("/{productId}/stop-product-shop")
-    public ResponseEntity<?> updateInStock(
+    public ResponseEntity<?> closeInStock(
             @PathVariable Integer productId
     ) {
-        // Tìm kiếm sản phẩm trong cửa hàng
         Optional<Product> product = productService.findById(productId);
         if (!product.isPresent()) {
-            // Nếu sản phẩm không tồn tại, trả về mã trạng thái 404 Not Found
             return ResponseEntity.notFound().build();
         }
         // Cập nhật trạng thái sản phẩm và lưu vào cơ sở dữ liệu
         product.get().setInStock(false);
+        product.get().setEnabled(false);
         productService.editProduct(product.get());
-        // Trả về mã trạng thái 200 OK
         return ResponseEntity.ok().build();
     }
+
+    // mở bán sản phẩm
+    @PutMapping("/{productId}/open-product-shop")
+    public ResponseEntity<?> openInStock(
+            @PathVariable Integer productId
+    ) {
+        Optional<Product> product = productService.findById(productId);
+        if (!product.isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+        // Cập nhật trạng thái sản phẩm và lưu vào cơ sở dữ liệu
+        product.get().setInStock(true);
+        product.get().setEnabled(true);
+        productService.editProduct(product.get());
+        return ResponseEntity.ok().build();
+    }
+
 
     // hiển thị 5 sản phẩm bán chạy nhất
     @GetMapping("/list-product-discount")
@@ -149,4 +168,17 @@ public class ProductController {
         return productService.getAllProductsByCustomerId(customerId, page, size);
     }
 
+    // hiển thị tất cả ảnh của product
+    @GetMapping("/{productId}/all-images")
+    public Map<String, Object> getProductWithImages(@PathVariable Integer productId) {
+        return productService.getProductWithImages(productId);
+    }
+
+    // sửa ảnh product
+    @PutMapping("/{productId}/update-images")
+   public ResponseEntity<Product> updateProductImages(@PathVariable Integer productId,
+                                                      @RequestBody Map<String, Object> imageInfo) {
+        Product product = productService.updateProductImages(productId, imageInfo);
+        return ResponseEntity.ok().body(product);
+    }
 }
