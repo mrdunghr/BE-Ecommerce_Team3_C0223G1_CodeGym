@@ -30,6 +30,10 @@ public class ProductService {
         return iProductRepository.findById(id);
     }
 
+    public Product editProduct(Product product) {
+        return iProductRepository.save(product);
+    }
+
     public Product save(Product product) {
         // Kiểm tra xem sản phẩm có cùng tên đã tồn tại hay chưa
         boolean existsWithNameOrAlias = iProductRepository.existsByNameOrAlias(product.getName(), product.getAlias());
@@ -87,4 +91,6 @@ public class ProductService {
         }
         return productWithImages;
     }
+
+
 }
