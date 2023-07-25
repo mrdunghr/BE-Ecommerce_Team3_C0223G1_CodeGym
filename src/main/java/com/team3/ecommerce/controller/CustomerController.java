@@ -1,6 +1,5 @@
 package com.team3.ecommerce.controller;
 
-import com.team3.ecommerce.entity.ChangePasswordRequest;
 import com.team3.ecommerce.entity.Country;
 import com.team3.ecommerce.entity.Customer;
 import com.team3.ecommerce.service.CustomerService;
@@ -17,6 +16,7 @@ import java.util.Optional;
 public class CustomerController {
     @Autowired
     private CustomerService customerService;
+
     @GetMapping("/{id}")
     public ResponseEntity<Customer> getCustomerById(@PathVariable Integer id) {
         Optional<Customer> customer = customerService.getCustomerById(id);
@@ -26,6 +26,7 @@ public class CustomerController {
             return ResponseEntity.notFound().build();
         }
     }
+
     @GetMapping("/check-email")
     public ResponseEntity<Boolean> isEmailUnique(@RequestParam String email) {
         boolean isUnique = customerService.isEmailUnique(email);
@@ -42,6 +43,7 @@ public class CustomerController {
         customerService.registerCustomer(customer);
         return ResponseEntity.ok("Registration successful.");
     }
+
     @PostMapping("/login")
     public ResponseEntity<?> LoginCustomer(@RequestBody Customer customer) {
         Customer customer1 = customerService.findCustomerByEmail(customer.getEmail());
@@ -51,23 +53,10 @@ public class CustomerController {
             return ResponseEntity.badRequest().body("Wrong Email or Password");
         }
     }
+
     @GetMapping("/list-country")
-    public ResponseEntity<List<Country>> getCountryList(){
+    public ResponseEntity<List<Country>> getCountryList() {
         return new ResponseEntity<>(customerService.listAllCountries(), HttpStatus.OK);
     }
 
-    //đổi mật khẩu của của Customer
-    @PutMapping("/edit-password/{idCustomer}")
-    public ResponseEntity<?> editPassword(@PathVariable Integer idCustomer, @RequestBody ChangePasswordRequest request){
-        Optional<Customer> customer1 = customerService.findById(idCustomer);
-        if(!customer1.isPresent()){
-            return ResponseEntity.notFound().build();
-        }
-        if (!customer1.get().getPassword().equals(request.getOldPassword())) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Incorrect old password");
-        }
-        customer1.get().setPassword(request.getNewPassword());
-        customerService.saveCustomer(customer1.get());
-        return ResponseEntity.ok("Password changed successfully");
-    }
 }

@@ -1,11 +1,14 @@
 package com.team3.ecommerce.entity;
 
+import com.fasterxml.jackson.annotation.*;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Table(name = "categories")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Category extends IdBasedEntity {
 	
 	@Column(length = 128, nullable = false, unique = true)
@@ -23,10 +26,12 @@ public class Category extends IdBasedEntity {
 	private String allParentIDs;
 	
 	@OneToOne
+	@JsonBackReference
 	@JoinColumn(name = "parent_id")
 	private Category parent;
-	
-	@OneToMany(mappedBy = "parent")
+
+	@OneToMany(mappedBy = "parent", fetch = FetchType.EAGER)
+	@JsonIgnoreProperties("children")
 	@OrderBy("name asc")
 	private Set<Category> children = new HashSet<>();
 

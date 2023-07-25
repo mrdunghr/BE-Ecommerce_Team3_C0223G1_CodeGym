@@ -2,6 +2,7 @@ package com.team3.ecommerce.entity.product;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.team3.ecommerce.entity.*;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
@@ -60,6 +61,7 @@ public class Product extends IdBasedEntity {
 		
 	@ManyToOne
 	@JoinColumn(name = "category_id")
+	@JsonIgnoreProperties("category")
 	private Category category;
 	
 	@ManyToOne

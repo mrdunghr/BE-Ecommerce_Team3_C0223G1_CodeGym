@@ -18,34 +18,32 @@ public class ShopService {
     private IShopRepository shopRepository;
 
 
-
-
-    public Page<Shop> findAllShop(Pageable pageable){
+    public Page<Shop> findAllShop(Pageable pageable) {
         return shopRepository.findAll(pageable);
     }
 
 
-    public Shop createShop(Shop shop, Customer customer) {
-
-        shop.setCreatedTime(new Date());
-        shop.setEnabled(true);
-        shop.setCustomer(customer);
-        Shop updateShop = shopRepository.save(shop);
-        return updateShop;
+    public Shop createShop(Shop shop) {
+//
+//        shop.setCreatedTime(new Date());
+//        shop.setEnabled(true);
+//        shop.setCustomer(customer);
+//        Shop updateShop = shopRepository.save(shop);
+        return shopRepository.save(shop);
 
     }
 
     // tìm kiếm shop
-    public Optional<Shop> findByIdShop(Integer id){
+    public Optional<Shop> findByIdShop(Integer id) {
         return shopRepository.findById(id);
     }
 
     // update shop
-    public Shop updateShop(Shop shop){
+    public Shop updateShop(Shop shop) {
         return shopRepository.save(shop);
     }
 
-
-
-
+    public Page<Shop> findShopByCustomer(Customer customer, Pageable pageable){
+        return shopRepository.findShopByCustomer(customer, pageable);
+    }
 }

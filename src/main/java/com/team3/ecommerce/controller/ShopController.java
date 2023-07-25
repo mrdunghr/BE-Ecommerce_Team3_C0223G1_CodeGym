@@ -13,7 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.Date;
 import java.util.Optional;
 
 @RestController
@@ -39,9 +39,25 @@ public class ShopController {
 
     // tạo shop mới
     @PostMapping("/create")
-    public ResponseEntity<Shop> createShop(@RequestBody Shop shop,@RequestParam Integer customerId){
-        Customer customer = customerService.getCustomerById(customerId).get();
-        return new ResponseEntity<>(shopService.createShop(shop,customer),HttpStatus.OK);
+    public ResponseEntity<?> createShop(@RequestBody Shop shop) {
+        // Lấy thông tin khách hàng từ đối tượng Shop
+        Customer customer = shop.getCustomer();
+
+        // Tạo đối tượng Shop mới
+        Shop newShop = new Shop();
+        newShop.setName(shop.getName());
+        newShop.setAlias(shop.getAlias());
+        newShop.setImage(shop.getImage());
+        newShop.setDeliveryAddress(shop.getDeliveryAddress());
+        newShop.setEnabled(true);
+        newShop.setCreatedTime(new Date());
+        newShop.setCustomer(customer);
+
+        // Lưu đối tượng Shop mới vào cơ sở dữ liệu
+        Shop savedShop = shopService.createShop(newShop);
+
+        // Trả về thông tin Shop mới vừa tạo
+        return ResponseEntity.ok(savedShop);
     }
     // Tìm kiếm theo name shop
     @GetMapping("/search-by-name")
@@ -65,4 +81,20 @@ public class ShopController {
         shopService.updateShop(shop);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    // lấy dánh sách shop của customer
+    @GetMapping("/{customer_id}")
+    public ResponseEntity<?> findShopByCustomer(@PathVariable Integer customer_id,
+                                                @RequestParam(defaultValue = "0") int page,
+                                                @RequestParam(defaultValue = "5") int size) {
+        Customer customer = customerService.getCustomerById(customer_id).orElse(null);
+        if (customer != null && customer.isEnabled()) {
+            Pageable pageable = PageRequest.of(page, size);
+            Page<Shop> shops = shopService.findShopByCustomer(customer, pageable);
+            return new ResponseEntity<>(shops, HttpStatus.OK);
+        } else {
+            return ResponseEntity.badRequest().body("tài khoản không tồn tại hoặc bị vô hiệu hóa");
+        }
+    }
+
 }

@@ -13,6 +13,7 @@ import java.util.Optional;
 public class BrandService {
     @Autowired
     BrandRepository brandRepository;
+
     public Optional<Brand> findBrandById(Integer id) {
         return brandRepository.findById(id);
     }
