@@ -4,6 +4,7 @@ import com.team3.ecommerce.entity.Brand;
 import com.team3.ecommerce.entity.Category;
 import com.team3.ecommerce.entity.Shop;
 import com.team3.ecommerce.entity.product.Product;
+import com.team3.ecommerce.entity.product.ProductImage;
 import com.team3.ecommerce.service.BrandService;
 import com.team3.ecommerce.service.CategoryService;
 import com.team3.ecommerce.service.ProductService;
@@ -16,6 +17,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @CrossOrigin("*")
@@ -161,4 +165,37 @@ public class ProductController {
         return productService.getAllProductsByCustomerId(customerId, page, size);
     }
 
+    // hiển thị tất cả ảnh của product
+    @GetMapping("/{productId}/all-images")
+    public Map<String, Object> getProductWithImages(@PathVariable Integer productId) {
+        return productService.getProductWithImages(productId);
+    }
+
+    // sửa ảnh product
+    @PutMapping("/{productId}/update-images")
+//    public ResponseEntity<String> updateProductImages(@PathVariable Integer productId,
+//                                                      @RequestBody Map<String, Object> imageInfo) {
+//        String mainImage = (String) imageInfo.get("mainImage");
+//        List<String> images = (List<String>) imageInfo.get("images");
+//        Optional<Product> product = productService.findById(productId);
+//        // Cập nhật ảnh chính của sản phẩm
+//        product.get().setMainImage(mainImage);
+//        productService.save(product.get());
+//
+//        // Xóa tất cả các ảnh phụ của sản phẩm trong database
+//        productService.deleteByProductAndType(product);
+//
+//        // Thêm các ảnh mới vào sản phẩm
+//        List<ProductImage> productImages = new ArrayList<>();
+//        for (String imageName : images) {
+//            ProductImage productImage = new ProductImage();
+//            productImage.setProduct(product.get());
+//            productImage.setName(imageName);
+//
+//            productImages.add(productImage);
+//        }
+//        productService.save(productImages);
+//
+//        return ResponseEntity.ok("Product images updated successfully");
+//    }
 }
