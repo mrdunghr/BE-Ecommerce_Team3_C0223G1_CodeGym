@@ -129,7 +129,7 @@ public class ProductController {
         }
         // Cập nhật trạng thái sản phẩm và lưu vào cơ sở dữ liệu
         product.get().setInStock(false);
-        productService.save(product.get());
+        productService.editProduct(product.get());
         // Trả về mã trạng thái 200 OK
         return ResponseEntity.ok().build();
     }
