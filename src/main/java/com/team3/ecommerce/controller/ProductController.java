@@ -122,21 +122,36 @@ public class ProductController {
 
     // ngừng bán sản phẩm của 1 shop
     @PutMapping("/{productId}/stop-product-shop")
-    public ResponseEntity<?> updateInStock(
+    public ResponseEntity<?> closeInStock(
             @PathVariable Integer productId
     ) {
-        // Tìm kiếm sản phẩm trong cửa hàng
         Optional<Product> product = productService.findById(productId);
         if (!product.isPresent()) {
-            // Nếu sản phẩm không tồn tại, trả về mã trạng thái 404 Not Found
             return ResponseEntity.notFound().build();
         }
         // Cập nhật trạng thái sản phẩm và lưu vào cơ sở dữ liệu
         product.get().setInStock(false);
+        product.get().setEnabled(false);
         productService.editProduct(product.get());
-        // Trả về mã trạng thái 200 OK
         return ResponseEntity.ok().build();
     }
+
+    // mở bán sản phẩm
+    @PutMapping("/{productId}/open-product-shop")
+    public ResponseEntity<?> openInStock(
+            @PathVariable Integer productId
+    ) {
+        Optional<Product> product = productService.findById(productId);
+        if (!product.isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+        // Cập nhật trạng thái sản phẩm và lưu vào cơ sở dữ liệu
+        product.get().setInStock(true);
+        product.get().setEnabled(true);
+        productService.editProduct(product.get());
+        return ResponseEntity.ok().build();
+    }
+
 
     // hiển thị 5 sản phẩm bán chạy nhất
     @GetMapping("/list-product-discount")
