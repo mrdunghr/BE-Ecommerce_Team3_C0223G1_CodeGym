@@ -121,24 +121,12 @@ public class ProductController {
 
 
     // ngừng bán sản phẩm của 1 shop
-    @PutMapping("/{productId}/stop-product-shop/{shopId}")
+    @PutMapping("/{productId}/stop-product-shop")
     public ResponseEntity<?> updateInStock(
-            @PathVariable Integer productId,
-            @PathVariable Integer shopId
+            @PathVariable Integer productId
     ) {
-        // Kiểm tra xem đối tượng Shop có tồn tại hay không
-        Optional<Shop> shop1 = shopService.findByIdShop(shopId);
-        if (!shop1.isPresent()) {
-            // Nếu không tồn tại, trả về mã trạng thái 404 Not Found
-            return ResponseEntity.notFound().build();
-        }
-        // Kiểm tra xem các tham số truyền vào có đầy đủ hay không
-        if (productId == null || shopId == null) {
-            // Nếu thiếu tham số, trả về mã trạng thái 400 Bad Request
-            return ResponseEntity.badRequest().build();
-        }
         // Tìm kiếm sản phẩm trong cửa hàng
-        Optional<Product> product = productService.findProductsInShopByIdProducts(productId, shop1.get());
+        Optional<Product> product = productService.findById(productId);
         if (!product.isPresent()) {
             // Nếu sản phẩm không tồn tại, trả về mã trạng thái 404 Not Found
             return ResponseEntity.notFound().build();
