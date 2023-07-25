@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -174,9 +175,42 @@ public class ProductController {
 
     // sửa ảnh product
     @PutMapping("/{productId}/update-images")
-   public ResponseEntity<Product> updateProductImages(@PathVariable Integer productId,
-                                                      @RequestBody Map<String, Object> imageInfo) {
+    public ResponseEntity<Product> updateProductImages(@PathVariable Integer productId,
+                                                       @RequestBody Map<String, Object> imageInfo) {
         Product product = productService.updateProductImages(productId, imageInfo);
         return ResponseEntity.ok().body(product);
+    }
+    // hiển thị product theo category
+    @GetMapping("/show-by-category/{category_id}")
+    public ResponseEntity<?> showProductByCategory(@PathVariable Integer category_id,
+                                                   @RequestParam(defaultValue = "0") Integer page,
+                                                   @RequestParam(defaultValue = "10") Integer size,
+                                                   @RequestParam(defaultValue = "false") boolean list) {
+
+        Category category = categoryService.findCategoryById(category_id).get();
+
+        if (category == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        boolean categoryExists = categoryService.checkCategoryExists(category_id);
+        if (!categoryExists) {
+            return ResponseEntity.notFound().build();
+        }
+
+        if (list) {
+            List<Product> products = productService.getAllProductByCategory(category);
+            if (products.isEmpty()) {
+                return ResponseEntity.notFound().build();
+            }
+            return ResponseEntity.ok(products);
+        } else {
+            Pageable pageable = PageRequest.of(page,size);
+            Page<Product> products = productService.getProductsByCategory(category, pageable);
+            if (products.isEmpty()) {
+                return ResponseEntity.notFound().build();
+            }
+            return ResponseEntity.ok(products);
+        }
     }
 }
