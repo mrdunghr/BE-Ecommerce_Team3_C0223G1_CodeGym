@@ -20,4 +20,6 @@ public interface IShopRepository extends JpaRepository<Shop, Integer> {
 
     @Query("SELECT s FROM Shop s WHERE s.customer = :customer")
     Page<Shop> findShopByCustomer(@Param("customer") Customer customer, Pageable pageable);
+
+    Iterable<Shop> findShopByCustomer(Customer customer);
 }

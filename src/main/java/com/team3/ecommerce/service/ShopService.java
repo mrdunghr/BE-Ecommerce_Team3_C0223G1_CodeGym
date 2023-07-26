@@ -43,7 +43,13 @@ public class ShopService {
         return shopRepository.save(shop);
     }
 
+    // danh sách shop của customer theo page
     public Page<Shop> findShopByCustomer(Customer customer, Pageable pageable){
         return shopRepository.findShopByCustomer(customer, pageable);
+    }
+
+    // danh sách shop của customer theo list
+    public Iterable<Shop> findShopList(Customer customer) {
+        return shopRepository.findShopByCustomer(customer);
     }
 }

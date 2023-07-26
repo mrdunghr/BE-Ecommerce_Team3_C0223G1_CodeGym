@@ -2,7 +2,6 @@ package com.team3.ecommerce.entity.product;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.team3.ecommerce.entity.IdBasedEntity;
 
 import javax.persistence.*;
