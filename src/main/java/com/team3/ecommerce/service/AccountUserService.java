@@ -26,4 +26,7 @@ public class AccountUserService {
     public List<User> listAll(){
         return accountUserRepository.findAll();
     }
+    public User createUser(User user) {
+        return accountUserRepository.save(user);
+    }
 }

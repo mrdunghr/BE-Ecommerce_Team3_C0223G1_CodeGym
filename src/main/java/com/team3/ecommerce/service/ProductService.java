@@ -4,6 +4,8 @@ import com.team3.ecommerce.entity.Brand;
 import com.team3.ecommerce.entity.Category;
 import com.team3.ecommerce.entity.Shop;
 import com.team3.ecommerce.entity.product.Product;
+import com.team3.ecommerce.entity.product.ProductImage;
+import com.team3.ecommerce.repository.ProductImageRepository;
 import com.team3.ecommerce.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -12,13 +14,17 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.Optional;
+import java.time.Instant;
+import java.util.*;
 
 @Service
 @Transactional
 public class ProductService {
     @Autowired
     private ProductRepository iProductRepository;
+    @Autowired
+    private ProductImageRepository productImageRepository;
+
 
     public Iterable<Product> findAll() {
         return iProductRepository.findAll();
@@ -29,7 +35,23 @@ public class ProductService {
         return iProductRepository.findById(id);
     }
 
+    public Product editProduct(Product product) {
+        return iProductRepository.save(product);
+    }
+
     public Product save(Product product) {
+        // Kiểm tra xem sản phẩm có cùng tên đã tồn tại hay chưa
+        boolean existsWithNameOrAlias = iProductRepository.existsByNameOrAlias(product.getName(), product.getAlias());
+        if (existsWithNameOrAlias) {
+            throw new IllegalArgumentException("Product name or Alias must be unique");
+        }
+        product.setEnabled(true);
+        product.setCreatedTime(Date.from(Instant.now()));
+        product.setInStock(true);
+        product.setAverageRating(0);
+        product.setDiscountPercent(0);
+        product.setMainImage("");
+        product.setReviewCount(0);
         return iProductRepository.save(product);
     }
 
@@ -37,12 +59,6 @@ public class ProductService {
         iProductRepository.deleteById(id);
     }
 
-    // tìm kiếm sản phẩm theo id của 1 shop
-    public Optional<Product> findProductsInShopByIdProducts(Integer idProducts, Shop shop) {
-
-        return iProductRepository.findProductsInShopByIdProducts(idProducts, shop);
-
-    }
 
     //Toàn bộ sản phẩm của 1 shop: theo các tiêu chí
     public Page<Product> findByShop(Shop shop, String keyword, Category category, Brand brand, Pageable pageable) {
@@ -62,5 +78,55 @@ public class ProductService {
     public Page<Product> getAllProductsByCustomerId(Integer customerId, Integer page, Integer size) {
         Pageable pageable = PageRequest.of(page, size);
         return iProductRepository.findByCustomerId(customerId, pageable);
+    }
+
+    // hiển thị tất cả ảnh của sản phẩm
+    public Map<String, Object> getProductWithImages(Integer productId) {
+        List<Object[]> results = iProductRepository.findProductImages(productId);
+        Map<String, Object> productWithImages = new HashMap<>();
+        for (Object[] result : results) {
+            String mainImage = (String) result[0];
+            String imageName = (String) result[1];
+            if (!productWithImages.containsKey("mainImage")) {
+                productWithImages.put("mainImage", mainImage);
+            }
+            List<String> images = (List<String>) productWithImages.getOrDefault("images", new ArrayList<>());
+            images.add(imageName);
+            productWithImages.put("images", images);
+        }
+        return productWithImages;
+    }
+
+    //sửa ảnh sản phẩm
+    @Transactional
+    public Product updateProductImages(Integer productId, Map<String, Object> imageInfo) {
+        String mainImage = (String) imageInfo.get("mainImage");
+        List<String> images = (List<String>) imageInfo.get("images");
+        Product product = iProductRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Product not found with id " + productId));
+        // Cập nhật ảnh chính của sản phẩm
+        product.setMainImage(mainImage);
+        iProductRepository.save(product);
+        // Xóa tất cả các ảnh phụ của sản phẩm trong database
+        productImageRepository.deleteByProduct(product);
+        // Thêm các ảnh mới vào sản phẩm
+        List<ProductImage> productImages = new ArrayList<>();
+        for (String imageName : images) {
+            ProductImage productImage = new ProductImage();
+            productImage.setProduct(product);
+            productImage.setName(imageName);
+            productImages.add(productImage);
+        }
+        productImageRepository.saveAll(productImages);
+        return product;
+    }
+
+    // hiển thị product theo category phân trang
+    public Page<Product> getProductsByCategory(Category category, Pageable pageable) {
+        return iProductRepository.findByCategory(category, pageable);
+    }
+    // hiển thị product theo category toàn bộ
+    public List<Product> getAllProductByCategory(Category category){
+        return iProductRepository.findByCategory(category);
     }
 }

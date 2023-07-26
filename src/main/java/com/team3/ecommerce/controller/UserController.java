@@ -24,5 +24,13 @@ public class UserController {
             return ResponseEntity.badRequest().body("Wrong Email or Password");
         }
     }
-
+    @PostMapping("create-user")
+    public ResponseEntity<?> createUser(@RequestBody User user) {
+        User newUser = accountUserService.findUserByEmail(user.getEmail());
+        if(newUser != null) {
+            return ResponseEntity.badRequest().body("Email already exists");
+        } else {
+            return new ResponseEntity<>(accountUserService.createUser(user),HttpStatus.OK);
+        }
+    }
 }

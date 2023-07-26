@@ -14,6 +14,10 @@ public class CategoryService {
     @Autowired
     CategoryRepository categoryRepository;
 
+    // kiểm tra xem category có trong hệ thống hay không
+    public boolean checkCategoryExists(Integer categoryId) {
+        return categoryRepository.existsById(categoryId);
+    }
     public Optional<Category> findCategoryById(Integer id) {
         return categoryRepository.findById(id);
     }

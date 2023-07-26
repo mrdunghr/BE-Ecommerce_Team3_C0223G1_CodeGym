@@ -82,18 +82,24 @@ public class ShopController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    // lấy dánh sách shop của customer
+    // lấy dánh sách shop của customer theo page
     @GetMapping("/{customer_id}")
     public ResponseEntity<?> findShopByCustomer(@PathVariable Integer customer_id,
                                                 @RequestParam(defaultValue = "0") int page,
-                                                @RequestParam(defaultValue = "5") int size) {
+                                                @RequestParam(defaultValue = "5") int size,
+                                                @RequestParam(defaultValue = "false") boolean list) {
         Customer customer = customerService.getCustomerById(customer_id).orElse(null);
         if (customer != null && customer.isEnabled()) {
-            Pageable pageable = PageRequest.of(page, size);
-            Page<Shop> shops = shopService.findShopByCustomer(customer, pageable);
-            return new ResponseEntity<>(shops, HttpStatus.OK);
+            if (list) {
+                Iterable<Shop> shops = shopService.findShopList(customer);
+                return ResponseEntity.ok(shops);
+            } else {
+                Pageable pageable = PageRequest.of(page, size);
+                Page<Shop> shops = shopService.findShopByCustomer(customer, pageable);
+                return new ResponseEntity<>(shops, HttpStatus.OK);
+            }
         } else {
-            return ResponseEntity.badRequest().body("tài khoản không tồn tại hoặc bị vô hiệu hóa");
+            return ResponseEntity.badRequest().body("Account does not exist or is disabled");
         }
     }
 
