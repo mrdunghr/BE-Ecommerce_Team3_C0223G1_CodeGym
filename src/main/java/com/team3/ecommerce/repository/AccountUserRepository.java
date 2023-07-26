@@ -1,6 +1,5 @@
 package com.team3.ecommerce.repository;
 
-import com.team3.ecommerce.entity.Customer;
 import com.team3.ecommerce.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
