@@ -36,8 +36,17 @@ public class ProductController {
 
     // thêm sản phẩm
     @PostMapping("/add")
-    public ResponseEntity<Product> createProduct(@RequestBody Product product) {
-        return new ResponseEntity<>(productService.save(product), HttpStatus.CREATED);
+    public ResponseEntity<?> createProduct(@RequestBody Product product) {
+        try {
+            Product createdProduct = productService.createProduct(product);
+            return ResponseEntity.ok(createdProduct);
+        } catch (IllegalArgumentException ex) {
+            // Xử lý lỗi nếu sản phẩm có cùng tên đã tồn tại
+            return ResponseEntity.badRequest().body(ex.getMessage());
+        } catch (Exception ex) {
+            // Xử lý lỗi nếu có lỗi xảy ra trong quá trình tạo sản phẩm
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error creating product");
+        }
     }
 
     // hiển thị tất cả sản phẩm
@@ -61,7 +70,7 @@ public class ProductController {
     public ResponseEntity<Product> updateProduct(@PathVariable Integer id, @RequestBody Product products) {
         if (this.productService.findById(id).isPresent()) {
             products.setId(id);
-            this.productService.save(products);
+            this.productService.editProduct(products);
             return new ResponseEntity<>(HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
