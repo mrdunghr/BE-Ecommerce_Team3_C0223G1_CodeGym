@@ -5,9 +5,11 @@ import com.team3.ecommerce.repository.AccountUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.relational.core.sql.In;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AccountUserService {
@@ -28,5 +30,8 @@ public class AccountUserService {
     }
     public User createUser(User user) {
         return accountUserRepository.save(user);
+    }
+    public User findUserById(Integer id) {
+        return accountUserRepository.findById(id).get();
     }
 }
