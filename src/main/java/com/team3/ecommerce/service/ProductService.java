@@ -121,5 +121,12 @@ public class ProductService {
         return product;
     }
 
-
+    // hiển thị product theo category phân trang
+    public Page<Product> getProductsByCategory(Category category, Pageable pageable) {
+        return iProductRepository.findByCategory(category, pageable);
+    }
+    // hiển thị product theo category toàn bộ
+    public List<Product> getAllProductByCategory(Category category){
+        return iProductRepository.findByCategory(category);
+    }
 }

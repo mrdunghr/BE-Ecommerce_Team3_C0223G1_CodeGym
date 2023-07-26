@@ -3,7 +3,6 @@ package com.team3.ecommerce.repository;
 import com.team3.ecommerce.entity.Shop;
 import com.team3.ecommerce.entity.Brand;
 import com.team3.ecommerce.entity.Category;
-import com.team3.ecommerce.entity.Shop;
 import com.team3.ecommerce.entity.product.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -46,4 +45,8 @@ public interface ProductRepository extends JpaRepository<Product,Integer> {
     // hiển thị tất cả ảnh
     @Query("SELECT p.mainImage, pi.name as imageName FROM Product p LEFT JOIN p.images pi WHERE p.id = :productId")
     List<Object[]> findProductImages(@Param("productId") Integer productId);
+
+    Page<Product> findByCategory(Category category, Pageable pageable);
+
+    List<Product> findByCategory(Category category);
 }
