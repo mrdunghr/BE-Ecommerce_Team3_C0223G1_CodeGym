@@ -29,4 +29,7 @@ public class CategoryService {
     public Category saveCategory(Category category) {
         return categoryRepository.save(category);
     }
+    public void updateCategoryEnabledStatus(Integer id, boolean enabled){
+        categoryRepository.updateEnabledStatus(id, enabled);
+    }
 }

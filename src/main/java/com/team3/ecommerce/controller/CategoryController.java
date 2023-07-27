@@ -3,8 +3,11 @@ package com.team3.ecommerce.controller;
 import com.team3.ecommerce.entity.Category;
 import com.team3.ecommerce.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.NoSuchElementException;
 
 @CrossOrigin
 @RestController
@@ -24,5 +27,18 @@ public class CategoryController {
     public ResponseEntity<Category> createCategory(@RequestBody Category category) {
         Category newCategory = categoryService.saveCategory(category);
         return ResponseEntity.ok(newCategory);
+    }
+    @PutMapping("/{id}/enabled/{status}")
+    public ResponseEntity<String> updateUserEnabledStatus(@PathVariable("id") Integer id, @PathVariable("status") boolean enabled) {
+        try {
+            categoryService.updateCategoryEnabledStatus(id, enabled);
+            String status = enabled ? "enabled" : "disabled";
+            String message = "The Category ID " + id + " has been " + status;
+            return ResponseEntity.ok(message);
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 }
