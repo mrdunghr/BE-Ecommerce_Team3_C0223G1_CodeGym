@@ -34,4 +34,7 @@ public class AccountUserService {
     public User findUserById(Integer id) {
         return accountUserRepository.findById(id).get();
     }
+    public void deleteUserById(Integer id) {
+        accountUserRepository.deleteById(id);
+    }
 }

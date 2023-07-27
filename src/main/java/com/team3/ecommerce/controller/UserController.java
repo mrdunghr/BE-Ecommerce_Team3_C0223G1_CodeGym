@@ -7,6 +7,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @CrossOrigin("*")
 @RestController
 @RequestMapping("/api/v1/users")
@@ -53,5 +56,15 @@ public class UserController {
 
         updatedUser = accountUserService.createUser(existingUser);
         return new ResponseEntity<>(updatedUser, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteUser(@PathVariable Integer id) {
+        User existingUser = accountUserService.findUserById(id);
+        if (existingUser == null) {
+            return ResponseEntity.notFound().build();
+        }
+        accountUserService.deleteUserById(id);
+        return ResponseEntity.ok("User deleted successfully.");
     }
 }

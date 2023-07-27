@@ -4,7 +4,6 @@ import com.team3.ecommerce.entity.Brand;
 import com.team3.ecommerce.entity.Category;
 import com.team3.ecommerce.entity.Shop;
 import com.team3.ecommerce.entity.product.Product;
-import com.team3.ecommerce.entity.product.ProductImage;
 import com.team3.ecommerce.service.BrandService;
 import com.team3.ecommerce.service.CategoryService;
 import com.team3.ecommerce.service.ProductService;
@@ -36,8 +35,17 @@ public class ProductController {
 
     // thêm sản phẩm
     @PostMapping("/add")
-    public ResponseEntity<Product> createProduct(@RequestBody Product product) {
-        return new ResponseEntity<>(productService.save(product), HttpStatus.CREATED);
+    public ResponseEntity<?> createProduct(@RequestBody Product product) {
+        try {
+            Product createdProduct = productService.createProduct(product);
+            return ResponseEntity.ok(createdProduct);
+        } catch (IllegalArgumentException ex) {
+            // Xử lý lỗi nếu sản phẩm có cùng tên đã tồn tại
+            return ResponseEntity.badRequest().body(ex.getMessage());
+        } catch (Exception ex) {
+            // Xử lý lỗi nếu có lỗi xảy ra trong quá trình tạo sản phẩm
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error creating product");
+        }
     }
 
     // hiển thị tất cả sản phẩm
