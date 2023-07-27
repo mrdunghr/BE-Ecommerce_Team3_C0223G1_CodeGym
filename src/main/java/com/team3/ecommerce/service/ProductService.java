@@ -49,7 +49,6 @@ public class ProductService {
         product.setCreatedTime(Date.from(Instant.now()));
         product.setInStock(true);
         product.setAverageRating(0);
-        product.setDiscountPercent(0);
         product.setMainImage("");
         product.setReviewCount(0);
 
