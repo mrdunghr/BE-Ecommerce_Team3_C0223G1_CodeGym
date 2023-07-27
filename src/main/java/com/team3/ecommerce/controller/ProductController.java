@@ -16,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -188,6 +189,7 @@ public class ProductController {
         Product product = productService.updateProductImages(productId, imageInfo);
         return ResponseEntity.ok().body(product);
     }
+
     // hiển thị product theo category
     @GetMapping("/show-by-category/{category_id}")
     public ResponseEntity<?> showProductByCategory(@PathVariable Integer category_id,
@@ -213,12 +215,23 @@ public class ProductController {
             }
             return ResponseEntity.ok(products);
         } else {
-            Pageable pageable = PageRequest.of(page,size);
+            Pageable pageable = PageRequest.of(page, size);
             Page<Product> products = productService.getProductsByCategory(category, pageable);
             if (products.isEmpty()) {
                 return ResponseEntity.notFound().build();
             }
             return ResponseEntity.ok(products);
         }
+    }
+
+    // tìm kiếm product theo tên
+    @GetMapping("/search")
+    public ResponseEntity<Iterable<Product>> findByNameProduct(@RequestParam("name") String name) {
+        Iterable<Product> listProducts = productService.findByNameProduct(name);
+        if(!listProducts.iterator().hasNext()){
+            return ResponseEntity.notFound().build();
+        }
+        return new ResponseEntity<>(listProducts,HttpStatus.OK);
+
     }
 }
