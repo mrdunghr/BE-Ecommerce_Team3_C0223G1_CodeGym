@@ -53,6 +53,5 @@ public interface ProductRepository extends JpaRepository<Product,Integer> {
     Iterable<Product> findByNameProduct(@Param("name") String name);
 
     // lấy 3 sản pẩm mới nhất
-    @Query("SELECT p FROM Product p ORDER BY p.id DESC")
     Iterable<Product> findTop3ByOrderByIdDesc();
 }

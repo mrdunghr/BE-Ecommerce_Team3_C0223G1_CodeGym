@@ -234,4 +234,14 @@ public class ProductController {
         return new ResponseEntity<>(listProducts,HttpStatus.OK);
     }
 
+    // 3 sản phẩm mới nhất
+    @GetMapping("/latest")
+    public ResponseEntity<Iterable<Product>> findTop3ByOrderByIdDesc(){
+        Iterable<Product> listProducts = productService.findTop3ByOrderByIdDesc();
+        if(!listProducts.iterator().hasNext()){
+            return ResponseEntity.notFound().build();
+        }
+        return new ResponseEntity<>(listProducts,HttpStatus.OK);
+    }
+
 }
