@@ -65,7 +65,7 @@ public class Category extends IdBasedEntity {
 		copyCategory.setImage(category.getImage());
 		copyCategory.setAlias(category.getAlias());
 		copyCategory.setEnabled(category.isEnabled());
-		copyCategory.setHasChildren(category.getChildren().size() > 0);
+//		copyCategory.setHasChildren(category.getChildren().size() > 0);
 		
 		return copyCategory;		
 	}
