@@ -51,4 +51,22 @@ public class CategoryController {
         categoryService.deleteCategoryById(id);
         return ResponseEntity.ok("Category deleted successfully.");
     }
+    @GetMapping("/{id}")
+    public ResponseEntity<Category> findCategoryById(@PathVariable Integer id){
+        return new ResponseEntity<>(categoryService.findCategoryById(id).get(),HttpStatus.OK);
+    }
+    @PutMapping("/{id}")
+    public ResponseEntity<Category> updateUser(@PathVariable Integer id, @RequestBody Category updateCategory) {
+        Category existingCategory = categoryService.findCategoryById(id).get();
+        if (existingCategory == null) {
+            return ResponseEntity.notFound().build();
+        }
+        existingCategory.setName(updateCategory.getName());
+        existingCategory.setAlias(updateCategory.getAlias());
+        existingCategory.setEnabled(updateCategory.isEnabled());
+        existingCategory.setImage(updateCategory.getImage());
+
+        updateCategory = categoryService.saveCategory(existingCategory);
+        return new ResponseEntity<>(updateCategory, HttpStatus.OK);
+    }
 }
