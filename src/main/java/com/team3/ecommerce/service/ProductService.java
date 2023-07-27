@@ -145,4 +145,7 @@ public class ProductService {
         return iProductRepository.findByNameProduct(name);
     }
 
+    // lấy 3 sản phẩm mới nhất
+
+
 }
