@@ -1,6 +1,7 @@
 package com.team3.ecommerce.controller;
 
 import com.team3.ecommerce.entity.Category;
+import com.team3.ecommerce.entity.User;
 import com.team3.ecommerce.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -40,5 +41,14 @@ public class CategoryController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
+    }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteUser(@PathVariable Integer id) {
+        Category category = categoryService.findCategoryById(id).get();
+        if (category == null) {
+            return ResponseEntity.notFound().build();
+        }
+        categoryService.deleteCategoryById(id);
+        return ResponseEntity.ok("Category deleted successfully.");
     }
 }

@@ -32,4 +32,7 @@ public class CategoryService {
     public void updateCategoryEnabledStatus(Integer id, boolean enabled){
         categoryRepository.updateEnabledStatus(id, enabled);
     }
+    public void deleteCategoryById(Integer id) {
+        categoryRepository.deleteById(id);
+    }
 }
