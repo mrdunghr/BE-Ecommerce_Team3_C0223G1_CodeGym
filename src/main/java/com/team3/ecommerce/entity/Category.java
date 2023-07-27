@@ -25,15 +25,15 @@ public class Category extends IdBasedEntity {
 	@Column(name = "all_parent_ids", length = 256, nullable = true)
 	private String allParentIDs;
 	
-	@OneToOne
-	@JsonBackReference
-	@JoinColumn(name = "parent_id")
-	private Category parent;
-
-	@OneToMany(mappedBy = "parent", fetch = FetchType.EAGER)
-	@JsonIgnoreProperties("children")
-	@OrderBy("name asc")
-	private Set<Category> children = new HashSet<>();
+//	@OneToOne
+//	@JsonBackReference
+//	@JoinColumn(name = "parent_id")
+//	private Category parent;
+//
+//	@OneToMany(mappedBy = "parent", fetch = FetchType.EAGER)
+//	@JsonIgnoreProperties("children")
+//	@OrderBy("name asc")
+//	private Set<Category> children = new HashSet<>();
 
 	public Category() {
 	}
@@ -83,10 +83,10 @@ public class Category extends IdBasedEntity {
 		this.image = "default.png";
 	}
 	
-	public Category(String name, Category parent) {
-		this(name);
-		this.parent = parent;
-	}	
+//	public Category(String name, Category parent) {
+//		this(name);
+//		this.parent = parent;
+//	}
 
 	public Category(Integer id, String name, String alias) {
 		super();
@@ -127,21 +127,21 @@ public class Category extends IdBasedEntity {
 		this.enabled = enabled;
 	}
 
-	public Category getParent() {
-		return parent;
-	}
-
-	public void setParent(Category parent) {
-		this.parent = parent;
-	}
-
-	public Set<Category> getChildren() {
-		return children;
-	}
-
-	public void setChildren(Set<Category> children) {
-		this.children = children;
-	}
+//	public Category getParent() {
+//		return parent;
+//	}
+//
+//	public void setParent(Category parent) {
+//		this.parent = parent;
+//	}
+//
+//	public Set<Category> getChildren() {
+//		return children;
+//	}
+//
+//	public void setChildren(Set<Category> children) {
+//		this.children = children;
+//	}
 	
 	@Transient
 	public String getImagePath() {
