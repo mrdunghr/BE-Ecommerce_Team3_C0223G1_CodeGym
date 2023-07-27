@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 @CrossOrigin
@@ -98,6 +97,7 @@ public class CartItemController {
         }
         return ResponseEntity.ok(updateCartItems);
     }
+    // xóa sản phẩm khỏi giỏ hàng
     @DeleteMapping("/delete-product")
     public ResponseEntity<List<CartItem>> deleteProduct(@RequestParam Integer productId, HttpSession session) {
         Integer customerId = (Integer) session.getAttribute("customerId");
