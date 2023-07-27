@@ -37,4 +37,8 @@ public class AccountUserService {
     public void deleteUserById(Integer id) {
         accountUserRepository.deleteById(id);
     }
+
+    public void updateUserEnabledStatus(Integer id, boolean enabled){
+        accountUserRepository.updateEnabledStatus(id, enabled);
+    }
 }

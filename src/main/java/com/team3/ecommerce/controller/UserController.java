@@ -6,9 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 @CrossOrigin("*")
 @RestController
@@ -66,5 +68,19 @@ public class UserController {
         }
         accountUserService.deleteUserById(id);
         return ResponseEntity.ok("User deleted successfully.");
+    }
+
+    @PutMapping("/{id}/enabled/{status}")
+    public ResponseEntity<String> updateUserEnabledStatus(@PathVariable("id") Integer id, @PathVariable("status") boolean enabled) {
+        try {
+            accountUserService.updateUserEnabledStatus(id, enabled);
+            String status = enabled ? "enabled" : "disabled";
+            String message = "The user ID " + id + " has been " + status;
+            return ResponseEntity.ok(message);
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 }
