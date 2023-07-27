@@ -61,7 +61,7 @@ public class ProductController {
     public ResponseEntity<Product> updateProduct(@PathVariable Integer id, @RequestBody Product products) {
         if (this.productService.findById(id).isPresent()) {
             products.setId(id);
-            this.productService.save(products);
+            this.productService.editProduct(products);
             return new ResponseEntity<>(HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
