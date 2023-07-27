@@ -139,5 +139,8 @@ public class ProductService {
     public List<Product> getAllProductByCategory(Category category){
         return iProductRepository.findByCategory(category);
     }
-
+    // kiểm tra sản phẩm có tồn tại hay không
+    public boolean productIsExisted (Integer id) {
+        return iProductRepository.existsById(id);
+    }
 }

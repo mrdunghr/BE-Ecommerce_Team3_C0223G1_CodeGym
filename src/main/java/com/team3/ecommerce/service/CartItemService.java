@@ -21,4 +21,7 @@ public class CartItemService {
     public List<CartItem> getCartItemByCustomerId(Integer id){
         return cardItemRepository.findByCustomerId(id);
     }
+    public void deleteCartItem(CartItem cartItem) {
+        cardItemRepository.delete(cartItem);
+    }
 }
