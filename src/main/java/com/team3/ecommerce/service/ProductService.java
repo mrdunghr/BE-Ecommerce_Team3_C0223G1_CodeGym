@@ -140,4 +140,12 @@ public class ProductService {
         return iProductRepository.findByCategory(category);
     }
 
+    // tìm kiếm theo tên
+    public Iterable<Product> findByNameProduct(String name){
+        return iProductRepository.findByNameProduct(name);
+    }
+
+    // lấy 3 sản phẩm mới nhất
+
+
 }
