@@ -4,7 +4,6 @@ import com.team3.ecommerce.entity.Brand;
 import com.team3.ecommerce.entity.Category;
 import com.team3.ecommerce.entity.Shop;
 import com.team3.ecommerce.entity.product.Product;
-import com.team3.ecommerce.entity.product.ProductImage;
 import com.team3.ecommerce.service.BrandService;
 import com.team3.ecommerce.service.CategoryService;
 import com.team3.ecommerce.service.ProductService;
@@ -17,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -36,8 +36,17 @@ public class ProductController {
 
     // thêm sản phẩm
     @PostMapping("/add")
-    public ResponseEntity<Product> createProduct(@RequestBody Product product) {
-        return new ResponseEntity<>(productService.save(product), HttpStatus.CREATED);
+    public ResponseEntity<?> createProduct(@RequestBody Product product) {
+        try {
+            Product createdProduct = productService.createProduct(product);
+            return ResponseEntity.ok(createdProduct);
+        } catch (IllegalArgumentException ex) {
+            // Xử lý lỗi nếu sản phẩm có cùng tên đã tồn tại
+            return ResponseEntity.badRequest().body(ex.getMessage());
+        } catch (Exception ex) {
+            // Xử lý lỗi nếu có lỗi xảy ra trong quá trình tạo sản phẩm
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error creating product");
+        }
     }
 
     // hiển thị tất cả sản phẩm
@@ -180,6 +189,7 @@ public class ProductController {
         Product product = productService.updateProductImages(productId, imageInfo);
         return ResponseEntity.ok().body(product);
     }
+
     // hiển thị product theo category
     @GetMapping("/show-by-category/{category_id}")
     public ResponseEntity<?> showProductByCategory(@PathVariable Integer category_id,
@@ -205,7 +215,7 @@ public class ProductController {
             }
             return ResponseEntity.ok(products);
         } else {
-            Pageable pageable = PageRequest.of(page,size);
+            Pageable pageable = PageRequest.of(page, size);
             Page<Product> products = productService.getProductsByCategory(category, pageable);
             if (products.isEmpty()) {
                 return ResponseEntity.notFound().build();
@@ -213,4 +223,25 @@ public class ProductController {
             return ResponseEntity.ok(products);
         }
     }
+
+    // tìm kiếm product theo tên
+    @GetMapping("/search")
+    public ResponseEntity<Iterable<Product>> findByNameProduct(@RequestParam("name") String name) {
+        Iterable<Product> listProducts = productService.findByNameProduct(name);
+        if(!listProducts.iterator().hasNext()){
+            return ResponseEntity.notFound().build();
+        }
+        return new ResponseEntity<>(listProducts,HttpStatus.OK);
+    }
+
+    // 3 sản phẩm mới nhất
+    @GetMapping("/latest")
+    public ResponseEntity<Iterable<Product>> findTop3ByOrderByIdDesc(){
+        Iterable<Product> listProducts = productService.findTop3ByOrderByIdDesc();
+        if(!listProducts.iterator().hasNext()){
+            return ResponseEntity.notFound().build();
+        }
+        return new ResponseEntity<>(listProducts,HttpStatus.OK);
+    }
+
 }
