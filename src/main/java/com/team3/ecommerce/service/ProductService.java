@@ -150,4 +150,7 @@ public class ProductService {
         return iProductRepository.findTop3ByOrderByIdDesc();
     }
 
+    public boolean productIsExisted(Integer id) {
+        return iProductRepository.existsById(id);
+    }
 }
