@@ -25,4 +25,14 @@ public class CategoryService {
     public Iterable<Category> findAllCategory() {
         return categoryRepository.findAll();
     }
+
+    public Category saveCategory(Category category) {
+        return categoryRepository.save(category);
+    }
+    public void updateCategoryEnabledStatus(Integer id, boolean enabled){
+        categoryRepository.updateEnabledStatus(id, enabled);
+    }
+    public void deleteCategoryById(Integer id) {
+        categoryRepository.deleteById(id);
+    }
 }

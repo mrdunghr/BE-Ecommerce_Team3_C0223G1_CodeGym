@@ -47,4 +47,11 @@ public interface ProductRepository extends JpaRepository<Product,Integer> {
     Page<Product> findByCategory(Category category, Pageable pageable);
 
     List<Product> findByCategory(Category category);
+
+    // tìm kiếm theo tên
+    @Query("SELECT p FROM  Product p WHERE p.name LIKE %:name% or p.alias LIKE %:name%" )
+    Iterable<Product> findByNameProduct(@Param("name") String name);
+
+    // lấy 3 sản pẩm mới nhất
+    Iterable<Product> findTop3ByOrderByIdDesc();
 }

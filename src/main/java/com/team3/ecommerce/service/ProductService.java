@@ -49,14 +49,13 @@ public class ProductService {
         product.setCreatedTime(Date.from(Instant.now()));
         product.setInStock(true);
         product.setAverageRating(0);
-        product.setDiscountPercent(0);
         product.setMainImage("");
         product.setReviewCount(0);
 
         // Nếu danh sách ảnh không rỗng, lưu danh sách ảnh vào cơ sở dữ liệu và gán sản phẩm cho mỗi ảnh
         if (!product.getImages().isEmpty()) {
             Set<ProductImage> images = product.getImages();
-            for (ProductImage image: images) {
+            for (ProductImage image : images) {
                 image.setProduct(product);
                 // lưu ảnh vào cơ sở dữ liệu
                 productImageRepository.save(image);
@@ -135,12 +134,20 @@ public class ProductService {
     public Page<Product> getProductsByCategory(Category category, Pageable pageable) {
         return iProductRepository.findByCategory(category, pageable);
     }
+
     // hiển thị product theo category toàn bộ
-    public List<Product> getAllProductByCategory(Category category){
+    public List<Product> getAllProductByCategory(Category category) {
         return iProductRepository.findByCategory(category);
     }
-    // kiểm tra sản phẩm có tồn tại hay không
-    public boolean productIsExisted (Integer id) {
-        return iProductRepository.existsById(id);
+
+    // tìm kiếm theo tên
+    public Iterable<Product> findByNameProduct(String name) {
+        return iProductRepository.findByNameProduct(name);
     }
+
+    // lấy 3 sản phẩm mới nhất
+    public Iterable<Product> findTop3ByOrderByIdDesc() {
+        return iProductRepository.findTop3ByOrderByIdDesc();
+    }
+
 }
