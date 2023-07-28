@@ -2,6 +2,7 @@ package com.team3.ecommerce.controller;
 
 import com.team3.ecommerce.entity.Customer;
 import com.team3.ecommerce.entity.Shop;
+import com.team3.ecommerce.entity.product.Product;
 import com.team3.ecommerce.repository.IShopRepository;
 import com.team3.ecommerce.service.CustomerService;
 import com.team3.ecommerce.service.ShopService;
@@ -82,6 +83,34 @@ public class ShopController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    // đóng shop
+    @PutMapping("/{shopId}/close")
+    public ResponseEntity<?> closeShop(
+            @PathVariable Integer shopId
+    ) {
+        Optional<Shop> shop = shopService.findByIdShop(shopId);
+        if (!shop.isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+        shop.get().setEnabled(false);
+        shopService.createShop(shop.get());
+        return ResponseEntity.ok().build();
+    }
+
+    // mở shop
+    @PutMapping("/{shopId}/open")
+    public ResponseEntity<?> openShop(
+            @PathVariable Integer shopId
+    ) {
+        Optional<Shop> shop = shopService.findByIdShop(shopId);
+        if (!shop.isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+        shop.get().setEnabled(true);
+        shopService.createShop(shop.get());
+        return ResponseEntity.ok().build();
+    }
+
     // lấy dánh sách shop của customer theo page
     @GetMapping("/{customer_id}")
     public ResponseEntity<?> findShopByCustomer(@PathVariable Integer customer_id,
@@ -102,5 +131,6 @@ public class ShopController {
             return ResponseEntity.badRequest().body("Account does not exist or is disabled");
         }
     }
+
 
 }
