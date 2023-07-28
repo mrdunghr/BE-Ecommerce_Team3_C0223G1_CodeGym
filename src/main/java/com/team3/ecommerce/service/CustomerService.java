@@ -67,4 +67,8 @@ public class CustomerService {
     public void updateUserEnabledStatus(Integer id, boolean enabled){
         customerRepository.updateEnabledStatus(id, enabled);
     }
+
+    public void deleteCustomerById(Integer id) {
+        customerRepository.deleteById(id);
+    }
 }

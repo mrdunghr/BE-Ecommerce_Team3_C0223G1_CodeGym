@@ -2,6 +2,7 @@ package com.team3.ecommerce.controller;
 
 import com.team3.ecommerce.entity.Country;
 import com.team3.ecommerce.entity.Customer;
+import com.team3.ecommerce.entity.User;
 import com.team3.ecommerce.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -72,6 +73,16 @@ public class CustomerController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteUser(@PathVariable Integer id) {
+        Customer existingCustomer = customerService.findById(id).get();
+        if (existingCustomer == null) {
+            return ResponseEntity.notFound().build();
+        }
+        customerService.deleteCustomerById(id);
+        return ResponseEntity.ok("Customer deleted successfully.");
     }
 
 }
