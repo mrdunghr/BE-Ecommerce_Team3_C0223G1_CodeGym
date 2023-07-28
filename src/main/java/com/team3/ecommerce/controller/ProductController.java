@@ -173,6 +173,13 @@ public class ProductController {
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
+    // hiển thị 10 sản phẩm bán chạy nhất
+    @GetMapping("/list-product-discount-sale")
+    public ResponseEntity<Iterable<Product>> listProductSale() {
+        Iterable<Product> products = productService.findTop10ByOrderByDiscountPercent();
+        return new ResponseEntity<>(products, HttpStatus.OK);
+    }
+
     // hiển thị tất cả sản phẩm của customer
     @PreAuthorize("hasRole('ROLE_CUSTOMER')")
     @GetMapping("/customer-list/{customerId}")

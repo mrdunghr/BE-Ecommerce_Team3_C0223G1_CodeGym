@@ -53,4 +53,14 @@ public class BrandController {
             return ResponseEntity.ok(brands);
         }
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Brand> getBrandById(@PathVariable Integer id) {
+        return ResponseEntity.ok(brandService.findBrandById(id).get());
+    }
+
+    @PostMapping("/create-brand")
+    public ResponseEntity<Brand> saveBrand(@RequestBody Brand brand) {
+        return ResponseEntity.ok(brandService.save(brand));
+    }
 }

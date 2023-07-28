@@ -34,10 +34,10 @@ public class ShopController {
     @PreAuthorize("hasRole('ROLE_CUSTOMER')")
     @GetMapping("/list")
     public ResponseEntity<Page<Shop>> findAll(@RequestParam(name = "page", defaultValue = "0") int page,
-                                              @RequestParam(name = "size", defaultValue = "3") int size) {
+                                              @RequestParam(name = "size", defaultValue = "3") int size){
         Pageable pageable = PageRequest.of(page, size);
-        Page<Shop> shop = shopService.findAllShop(pageable);
-        return new ResponseEntity<>(shop, HttpStatus.OK);
+          Page<Shop> shop = shopService.findAllShop(pageable);
+          return new ResponseEntity<>(shop, HttpStatus.OK);
     }
 
     // tạo shop mới
@@ -68,8 +68,6 @@ public class ShopController {
         // Trả về thông tin Shop mới vừa tạo
         return ResponseEntity.ok(savedShop);
     }
-
-
     // Tìm kiếm theo name shop
     @PreAuthorize("hasRole('ROLE_CUSTOMER')")
     @GetMapping("/search-by-name")
@@ -85,12 +83,12 @@ public class ShopController {
     // chỉnh sửa thông tin của shop
     @PreAuthorize("hasRole('ROLE_CUSTOMER')")
     @PutMapping("/edit-shop/{shopId}")
-    public ResponseEntity<Optional<Shop>> editShop(@PathVariable Integer shopId, @RequestBody Shop shop) {
-        Optional<Shop> shop1 = shopService.findByIdShop(shopId);
-        if (!shop1.isPresent()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    public ResponseEntity<Optional<Shop>> editShop(@PathVariable Integer shopId,@RequestBody Shop shop){
+        Optional<Shop> shop1= shopService.findByIdShop(shopId);
+        if(!shop1.isPresent()){
+               return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        shop.setId(shop1.get().getId());
+       shop.setId(shop1.get().getId());
         shopService.updateShop(shop);
         return new ResponseEntity<>(HttpStatus.OK);
     }

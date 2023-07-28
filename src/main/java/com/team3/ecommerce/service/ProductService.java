@@ -83,6 +83,11 @@ public class ProductService {
         return iProductRepository.findTop5ByOrderByDiscountPercentDesc();
     }
 
+    // hiển thị 10 sản phẩm bán chạy nhất
+    public Iterable<Product> findTop10ByOrderByDiscountPercent() {
+        return iProductRepository.findTop10ByOrderByDiscountPercentDesc();
+    }
+
     // hiển thị danh sách product của customer
     public Page<Product> getAllProductsByCustomerId(Integer customerId, Integer page, Integer size) {
         Pageable pageable = PageRequest.of(page, size);
