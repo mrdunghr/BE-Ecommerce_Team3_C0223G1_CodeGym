@@ -2,6 +2,7 @@ package com.team3.ecommerce.controller;
 
 import com.team3.ecommerce.entity.Brand;
 import com.team3.ecommerce.entity.Category;
+import com.team3.ecommerce.entity.User;
 import com.team3.ecommerce.service.BrandService;
 import com.team3.ecommerce.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,5 +53,25 @@ public class BrandController {
             Page<Brand> brands = brandService.showBrandPage(pageable);
             return ResponseEntity.ok(brands);
         }
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Brand> getBrandById(@PathVariable Integer id) {
+        return ResponseEntity.ok(brandService.findBrandById(id).get());
+    }
+
+    @PostMapping("/create-brand")
+    public ResponseEntity<Brand> saveBrand(@RequestBody Brand brand) {
+        return ResponseEntity.ok(brandService.save(brand));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteUser(@PathVariable Integer id) {
+        Brand existingBrand = brandService.findBrandById(id).get();
+        if (existingBrand == null) {
+            return ResponseEntity.notFound().build();
+        }
+        brandService.deleteBrandsById(id);
+        return ResponseEntity.ok("Brand deleted successfully.");
     }
 }

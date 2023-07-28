@@ -42,4 +42,10 @@ public class BrandService {
     public Page<Brand> showBrandPage(Pageable pageable){
         return brandRepository.findAll(pageable);
     }
+    public Brand save(Brand brand){
+        return brandRepository.save(brand);
+    }
+    public void deleteBrandsById(Integer id) {
+        brandRepository.deleteById(id);
+    }
 }
