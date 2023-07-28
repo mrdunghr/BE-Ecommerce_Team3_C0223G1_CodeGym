@@ -49,4 +49,7 @@ public interface ProductRepository extends JpaRepository<Product,Integer> {
     Page<Product> findByCategory(Category category, Pageable pageable);
 
     List<Product> findByCategory(Category category);
+
+    Iterable<Product> findTop10ByOrderByDiscountPercentDesc();
+
 }
