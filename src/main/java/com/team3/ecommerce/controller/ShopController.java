@@ -12,6 +12,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
@@ -30,6 +31,7 @@ public class ShopController {
     private IShopRepository iShopRepository;
 
     // hiển thị tất cả các shop
+    @PreAuthorize("hasRole('ROLE_CUSTOMER')")
     @GetMapping("/list")
     public ResponseEntity<Page<Shop>> findAll(@RequestParam(name = "page", defaultValue = "0") int page,
                                               @RequestParam(name = "size", defaultValue = "3") int size) {
@@ -44,6 +46,7 @@ public class ShopController {
 //        Customer customer = customerService.getCustomerById(customerId).get();
 //        return new ResponseEntity<>(shopService.createShop(shop, customer), HttpStatus.OK);
 //    }
+    @PreAuthorize("hasRole('ROLE_CUSTOMER')")
     @PostMapping("/create")
     public ResponseEntity<?> createShop(@RequestBody Shop shop) {
         // Lấy thông tin khách hàng từ đối tượng Shop
@@ -68,6 +71,7 @@ public class ShopController {
 
 
     // Tìm kiếm theo name shop
+    @PreAuthorize("hasRole('ROLE_CUSTOMER')")
     @GetMapping("/search-by-name")
     public ResponseEntity<Iterable<Shop>> findShopsByName(@RequestParam("name") String name) {
         Iterable<Shop> shops = iShopRepository.findAllByNameContaining(name);
@@ -79,6 +83,7 @@ public class ShopController {
     }
 
     // chỉnh sửa thông tin của shop
+    @PreAuthorize("hasRole('ROLE_CUSTOMER')")
     @PutMapping("/edit-shop/{shopId}")
     public ResponseEntity<Optional<Shop>> editShop(@PathVariable Integer shopId, @RequestBody Shop shop) {
         Optional<Shop> shop1 = shopService.findByIdShop(shopId);
@@ -91,6 +96,7 @@ public class ShopController {
     }
 
     // đóng shop
+    @PreAuthorize("hasRole('ROLE_CUSTOMER')")
     @PutMapping("/{shopId}/close")
     public ResponseEntity<?> closeShop(
             @PathVariable Integer shopId
@@ -105,6 +111,7 @@ public class ShopController {
     }
 
     // mở shop
+    @PreAuthorize("hasRole('ROLE_CUSTOMER')")
     @PutMapping("/{shopId}/open")
     public ResponseEntity<?> openShop(
             @PathVariable Integer shopId
@@ -119,6 +126,7 @@ public class ShopController {
     }
 
     // lấy dánh sách shop của customer theo page
+    @PreAuthorize("hasRole('ROLE_CUSTOMER')")
     @GetMapping("/{customer_id}")
     public ResponseEntity<?> findShopByCustomer(@PathVariable Integer customer_id,
                                                 @RequestParam(defaultValue = "0") int page,

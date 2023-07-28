@@ -14,6 +14,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -35,6 +36,7 @@ public class ProductController {
     BrandService brandService;
 
     // thêm sản phẩm
+    @PreAuthorize("hasRole('ROLE_CUSTOMER')")
     @PostMapping("/add")
     public ResponseEntity<?> createProduct(@RequestBody Product product) {
         try {
@@ -66,6 +68,7 @@ public class ProductController {
     }
 
     // Sửa sản phẩm
+    @PreAuthorize("hasRole('ROLE_CUSTOMER')")
     @PutMapping("/edit/{id}")
     public ResponseEntity<Product> updateProduct(@PathVariable Integer id, @RequestBody Product products) {
         if (this.productService.findById(id).isPresent()) {
@@ -129,6 +132,7 @@ public class ProductController {
 
 
     // ngừng bán sản phẩm của 1 shop
+    @PreAuthorize("hasRole('ROLE_CUSTOMER')")
     @PutMapping("/{productId}/stop-product-shop")
     public ResponseEntity<?> closeInStock(
             @PathVariable Integer productId
@@ -145,6 +149,7 @@ public class ProductController {
     }
 
     // mở bán sản phẩm
+    @PreAuthorize("hasRole('ROLE_CUSTOMER')")
     @PutMapping("/{productId}/open-product-shop")
     public ResponseEntity<?> openInStock(
             @PathVariable Integer productId
@@ -169,6 +174,7 @@ public class ProductController {
     }
 
     // hiển thị tất cả sản phẩm của customer
+    @PreAuthorize("hasRole('ROLE_CUSTOMER')")
     @GetMapping("/customer-list/{customerId}")
     public Page<Product> getAllProductsByCustomerId(@PathVariable Integer customerId,
                                                     @RequestParam(defaultValue = "0") Integer page,
@@ -183,6 +189,7 @@ public class ProductController {
     }
 
     // sửa ảnh product
+    @PreAuthorize("hasRole('ROLE_CUSTOMER')")
     @PutMapping("/{productId}/update-images")
     public ResponseEntity<Product> updateProductImages(@PathVariable Integer productId,
                                                        @RequestBody Map<String, Object> imageInfo) {

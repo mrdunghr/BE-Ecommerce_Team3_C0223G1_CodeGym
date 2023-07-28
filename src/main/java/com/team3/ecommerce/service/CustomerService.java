@@ -63,4 +63,9 @@ public class CustomerService {
     public Customer saveCustomer(Customer customer) {
         return customerRepository.save(customer);
     }
+
+    // kiểm tra xem eamil tồn tại chưa
+    public boolean existsByEmail(String email) {
+        return customerRepository.existsByEmail(email);
+    }
 }

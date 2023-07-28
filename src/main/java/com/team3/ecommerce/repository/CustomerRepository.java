@@ -5,7 +5,9 @@ import com.team3.ecommerce.entity.Customer;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface CustomerRepository extends CrudRepository<Customer, Integer> {
 	@Query("SELECT c FROM Customer c WHERE c.email = ?1")
 	public Customer findByEmail(String email);
@@ -18,5 +20,8 @@ public interface CustomerRepository extends CrudRepository<Customer, Integer> {
 	@Modifying
 	public void updateAuthenticationType(Integer customerId, AuthenticationType type);
 	public Customer findByResetPasswordToken(String token);
+
+	boolean existsByEmail(String email); // kiểm tra xem email tồn tại chưa
+
 
 }
