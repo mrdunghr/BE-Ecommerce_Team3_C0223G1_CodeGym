@@ -49,7 +49,7 @@ public class ProductService {
         product.setCreatedTime(Date.from(Instant.now()));
         product.setInStock(true);
         product.setAverageRating(0);
-        product.setMainImage("");
+//        product.setMainImage("");
         product.setReviewCount(0);
 
         // Nếu danh sách ảnh không rỗng, lưu danh sách ảnh vào cơ sở dữ liệu và gán sản phẩm cho mỗi ảnh
