@@ -63,4 +63,12 @@ public class CustomerService {
     public Customer saveCustomer(Customer customer) {
         return customerRepository.save(customer);
     }
+
+    public void updateUserEnabledStatus(Integer id, boolean enabled){
+        customerRepository.updateEnabledStatus(id, enabled);
+    }
+
+    public void deleteCustomerById(Integer id) {
+        customerRepository.deleteById(id);
+    }
 }
