@@ -49,15 +49,11 @@ public class CustomerController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> LoginCustomer(@RequestBody Customer customer, HttpSession session) {
+    public ResponseEntity<Customer> LoginCustomer(@RequestBody Customer customer, HttpSession session) {
         Customer customerCheckLogin = customerService.findCustomerByEmail(customer.getEmail());
-        if (customerCheckLogin != null && customerCheckLogin.getPassword().equals(customer.getPassword())) {
             // Đăng nhập thành công, lưu thông tin khách hàng vào session
             session.setAttribute("customerId", customerCheckLogin.getId());
-            return ResponseEntity.ok().body("Success");
-        } else {
-            return ResponseEntity.badRequest().body("Wrong Email or Password");
-        }
+            return ResponseEntity.ok().body(customerCheckLogin);
     }
 
 

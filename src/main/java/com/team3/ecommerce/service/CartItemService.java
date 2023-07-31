@@ -22,6 +22,8 @@ public class CartItemService {
         return cardItemRepository.findByCustomerId(id);
     }
     public void deleteCartItem(CartItem cartItem) {
+
         cardItemRepository.delete(cartItem);
     }
+
 }
