@@ -137,6 +137,7 @@ public class CustomerController {
     }
 
     // đổi mật khẩu
+    @PreAuthorize("hasRole('ROLE_CUSTOMER')")
     @PutMapping("/change-password")
     public ResponseEntity<?> changePassword(@RequestBody ChangePasswordRequest changePasswordRequest, HttpServletRequest request){
         try {
