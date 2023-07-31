@@ -16,4 +16,9 @@ public class ReviewService {
         return reviewRepository.findAllByProduct_Id(productId);
     }
 
+    public Review savReview(Review review){
+        return reviewRepository.save(review);
+    }
+
+
 }
