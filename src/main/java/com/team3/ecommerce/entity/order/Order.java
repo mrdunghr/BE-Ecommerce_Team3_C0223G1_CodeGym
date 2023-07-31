@@ -18,7 +18,7 @@ public class Order extends AbstractAddress {
 	@Column(nullable = false, length = 45)
 	private String country;
 	
-	private Date orderTime;
+	private Date orderTime = new Date();
 	
 	private float shippingCost;
 	private float productCost;
@@ -200,27 +200,27 @@ public class Order extends AbstractAddress {
 		setState(address.getState());			
 	}
 	
-	@Transient
-	public String getShippingAddress() {
-		String address = firstName;
-		
-		if (lastName != null && !lastName.isEmpty()) address += " " + lastName;
-		
-		if (!addressLine1.isEmpty()) address += ", " + addressLine1;
-		
-		if (addressLine2 != null && !addressLine2.isEmpty()) address += ", " + addressLine2;
-		
-		if (!city.isEmpty()) address += ", " + city;
-		
-		if (state != null && !state.isEmpty()) address += ", " + state;
-		
-		address += ", " + country;
-		
-		if (!postalCode.isEmpty()) address += ". Postal Code: " + postalCode;
-		if (!phoneNumber.isEmpty()) address += ". Phone Number: " + phoneNumber;
-		
-		return address;
-	}
+//	@Transient
+//	public String getShippingAddress() {
+//		String address = firstName;
+//
+//		if (lastName != null && !lastName.isEmpty()) address += " " + lastName;
+//
+//		if (!addressLine1.isEmpty()) address += ", " + addressLine1;
+//
+//		if (addressLine2 != null && !addressLine2.isEmpty()) address += ", " + addressLine2;
+//
+//		if (!city.isEmpty()) address += ", " + city;
+//
+//		if (state != null && !state.isEmpty()) address += ", " + state;
+//
+//		address += ", " + country;
+//
+//		if (!postalCode.isEmpty()) address += ". Postal Code: " + postalCode;
+//		if (!phoneNumber.isEmpty()) address += ". Phone Number: " + phoneNumber;
+//
+//		return address;
+//	}
 
 	public List<OrderTrack> getOrderTracks() {
 		return orderTracks;

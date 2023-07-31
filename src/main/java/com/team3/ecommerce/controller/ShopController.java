@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -44,6 +45,11 @@ public class ShopController {
         // Lấy thông tin khách hàng từ đối tượng Shop
         Customer customer = shop.getCustomer();
 
+        List<Shop> existingShops = (List<Shop>) shopService.findShopList(customer);
+        if (!existingShops.isEmpty()) {
+            // Người dùng đã có shop, có thể hiển thị thông báo lỗi hoặc cơ hội chỉnh sửa shop hiện có
+            return ResponseEntity.badRequest().body("You already have a shop.");
+        }
         // Tạo đối tượng Shop mới
         Shop newShop = new Shop();
         newShop.setName(shop.getName());

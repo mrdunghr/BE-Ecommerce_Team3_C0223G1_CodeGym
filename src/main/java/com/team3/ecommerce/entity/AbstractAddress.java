@@ -6,10 +6,10 @@ import javax.persistence.MappedSuperclass;
 @MappedSuperclass
 public abstract class AbstractAddress extends IdBasedEntity {
 	
-	@Column(name = "first_name", nullable = false, length = 45)
+	@Column(name = "first_name", nullable = true, length = 45)
 	protected String firstName;
 	
-	@Column(name = "last_name", nullable = false, length = 45)
+	@Column(name = "last_name", nullable = true, length = 45)
 	protected String lastName;
 	
 	@Column(name = "phone_number", nullable = false, length = 15)
