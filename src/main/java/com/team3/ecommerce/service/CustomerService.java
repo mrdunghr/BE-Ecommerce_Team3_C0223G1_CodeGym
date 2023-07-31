@@ -7,6 +7,7 @@ import com.team3.ecommerce.repository.CountryRepository;
 import com.team3.ecommerce.repository.CustomerRepository;
 import net.bytebuddy.utility.RandomString;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -21,6 +22,7 @@ public class CustomerService {
     private CountryRepository countryRepository;
     @Autowired
     private CustomerRepository customerRepository;
+
 
     public Optional<Customer> getCustomerById(Integer id) {
         return customerRepository.findById(id);
@@ -76,4 +78,6 @@ public class CustomerService {
     public void deleteCustomerById(Integer id) {
         customerRepository.deleteById(id);
     }
+
+
 }

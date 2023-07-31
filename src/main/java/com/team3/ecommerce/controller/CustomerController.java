@@ -1,5 +1,6 @@
 package com.team3.ecommerce.controller;
 
+import com.team3.ecommerce.entity.ChangePasswordRequest;
 import com.team3.ecommerce.entity.Country;
 import com.team3.ecommerce.entity.Customer;
 import com.team3.ecommerce.jwt.JwtTokenProvider;
@@ -9,6 +10,7 @@ import com.team3.ecommerce.payload.resp.JwtResp;
 import com.team3.ecommerce.payload.resp.MessageResp;
 import com.team3.ecommerce.security.CustomerDetails;
 import com.team3.ecommerce.entity.User;
+import com.team3.ecommerce.security.CustomerDetailsService;
 import com.team3.ecommerce.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,6 +23,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -40,6 +43,7 @@ public class CustomerController {
     private JwtTokenProvider tokenProvider;  //lâ userName từ token
     @Autowired
     private PasswordEncoder passwordEncoder; // để mã hóa password
+
     @PreAuthorize("hasRole('ROLE_CUSTOMER')")
 
     @GetMapping("/{id}")
@@ -60,15 +64,6 @@ public class CustomerController {
     }
 
     @PostMapping("/register")
-//    public ResponseEntity<String> registerCustomer(@RequestBody Customer customer) {
-//        boolean isUnique = customerService.isEmailUnique(customer.getEmail());
-//        if (!isUnique) {
-//            return ResponseEntity.badRequest().body("Email already exists.");
-//        }
-//
-//        customerService.registerCustomer(customer);
-//        return ResponseEntity.ok("Registration successful.");
-//    }
     public ResponseEntity<?> registerUser(@RequestBody SignupReq signupReq){
         if(customerService.existsByEmail(signupReq.getEmail())){
             return ResponseEntity.badRequest().body(new MessageResp("Error: Email is already !!!"));
@@ -100,14 +95,6 @@ public class CustomerController {
     }
 
     @PostMapping("/login")
-//    public ResponseEntity<?> LoginCustomer(@RequestBody Customer customer) {
-//        Customer customer1 = customerService.findCustomerByEmail(customer.getEmail());
-//        if (customer1 != null && customer1.getPassword().equals(customer.getPassword())) {
-//            return new ResponseEntity<>(customer1, HttpStatus.ACCEPTED);
-//        } else {
-//            return ResponseEntity.badRequest().body("Wrong Email or Password");
-//        }
-//    }
     public ResponseEntity<?> loginUser(@RequestBody LoginReq loginReq){
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginReq.getEmail(),loginReq.getPassword())
@@ -142,11 +129,37 @@ public class CustomerController {
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable Integer id) {
         Customer existingCustomer = customerService.findById(id).get();
-        if (existingCustomer == null) {
+        if (Objects.isNull(existingCustomer)) {
             return ResponseEntity.notFound().build();
         }
         customerService.deleteCustomerById(id);
         return ResponseEntity.ok("Customer deleted successfully.");
+    }
+
+    // đổi mật khẩu
+    @PutMapping("/change-password")
+    public ResponseEntity<?> changePassword(@RequestBody ChangePasswordRequest changePasswordRequest, HttpServletRequest request){
+        try {
+            // Lấy chuỗi JWT từ header "Authorization" của request
+            String bearerToken = request.getHeader("Authorization");
+            String jwt = tokenProvider.resolveToken(bearerToken);
+            // Lấy email của người dùng từ chuỗi JWT
+            String email = tokenProvider.getCustomerFromJwt(jwt);
+            // Xác thực người dùng và lấy thông tin chi tiết của người dùng
+            Customer customer = customerService.findCustomerByEmail(email);
+            // Xác minh mật khẩu cũ của người dùng
+            if (!passwordEncoder.matches(changePasswordRequest.getOldPassword(), customer.getPassword())) {
+                return new ResponseEntity<>("Old password is incorrect", HttpStatus.BAD_REQUEST);
+            }
+            // Đặt mật khẩu mới cho người dùng
+            String newPassword = passwordEncoder.encode(changePasswordRequest.getNewPassword());
+            customer.setPassword(newPassword);
+            customerService.saveCustomer(customer);
+            return new ResponseEntity<>("Password was successfully changed", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Error while changing password", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
     }
 
 }

@@ -56,5 +56,13 @@ public class JwtTokenProvider {
         return false;
     }
 
+    // lấy ra chuỗi token từ header
+    public String resolveToken(String bearerToken) {
+        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
+            return bearerToken.substring(7);
+        }
+        return null;
+    }
+
 
 }
