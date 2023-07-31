@@ -1,5 +1,6 @@
 package com.team3.ecommerce.entity.order;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.team3.ecommerce.entity.Category;
 import com.team3.ecommerce.entity.IdBasedEntity;
 import com.team3.ecommerce.entity.product.Product;
@@ -17,15 +18,17 @@ public class OrderDetail extends IdBasedEntity {
 	private float shippingCost;
 	private float unitPrice;
 	private float subtotal;
-	
+
 	@ManyToOne
+	@JsonIgnore
 	@JoinColumn(name = "product_id")
 	private Product product;
-	
+
 	@ManyToOne
+	@JsonIgnore
 	@JoinColumn(name = "order_id")
 	private Order order;
-	
+
 	public OrderDetail() {
 	}
 
@@ -37,14 +40,14 @@ public class OrderDetail extends IdBasedEntity {
 		this.shippingCost = shippingCost;
 		this.subtotal = subtotal;
 	}
-	
+
 	public OrderDetail(int quantity, String productName, float productCost, float shippingCost, float subtotal) {
 		this.product = new Product(productName);
 		this.quantity = quantity;
 		this.productCost = productCost * quantity;
 		this.shippingCost = shippingCost;
 		this.subtotal = subtotal;
-	}	
+	}
 
 	public int getQuantity() {
 		return quantity;
@@ -101,7 +104,7 @@ public class OrderDetail extends IdBasedEntity {
 	public void setOrder(Order order) {
 		this.order = order;
 	}
-	
-	
+
+
 }
 

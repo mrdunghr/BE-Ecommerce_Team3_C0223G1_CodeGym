@@ -2,7 +2,6 @@ package com.team3.ecommerce.controller;
 
 import com.team3.ecommerce.entity.Customer;
 import com.team3.ecommerce.entity.Shop;
-import com.team3.ecommerce.entity.product.Product;
 import com.team3.ecommerce.repository.IShopRepository;
 import com.team3.ecommerce.service.CustomerService;
 import com.team3.ecommerce.service.ShopService;
@@ -15,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -32,23 +32,23 @@ public class ShopController {
     // hiển thị tất cả các shop
     @GetMapping("/list")
     public ResponseEntity<Page<Shop>> findAll(@RequestParam(name = "page", defaultValue = "0") int page,
-                                              @RequestParam(name = "size", defaultValue = "3") int size) {
+                                              @RequestParam(name = "size", defaultValue = "3") int size){
         Pageable pageable = PageRequest.of(page, size);
         Page<Shop> shop = shopService.findAllShop(pageable);
         return new ResponseEntity<>(shop, HttpStatus.OK);
     }
 
     // tạo shop mới
-
-    //    public ResponseEntity<Shop> createShop(@RequestBody Shop shop, @RequestParam Integer customerId) {
-//        Customer customer = customerService.getCustomerById(customerId).get();
-//        return new ResponseEntity<>(shopService.createShop(shop, customer), HttpStatus.OK);
-//    }
     @PostMapping("/create")
     public ResponseEntity<?> createShop(@RequestBody Shop shop) {
         // Lấy thông tin khách hàng từ đối tượng Shop
         Customer customer = shop.getCustomer();
 
+        List<Shop> existingShops = (List<Shop>) shopService.findShopList(customer);
+        if (!existingShops.isEmpty()) {
+            // Người dùng đã có shop, có thể hiển thị thông báo lỗi hoặc cơ hội chỉnh sửa shop hiện có
+            return ResponseEntity.badRequest().body("You already have a shop.");
+        }
         // Tạo đối tượng Shop mới
         Shop newShop = new Shop();
         newShop.setName(shop.getName());
@@ -65,8 +65,6 @@ public class ShopController {
         // Trả về thông tin Shop mới vừa tạo
         return ResponseEntity.ok(savedShop);
     }
-
-
     // Tìm kiếm theo name shop
     @GetMapping("/search-by-name")
     public ResponseEntity<Iterable<Shop>> findShopsByName(@RequestParam("name") String name) {
@@ -80,9 +78,9 @@ public class ShopController {
 
     // chỉnh sửa thông tin của shop
     @PutMapping("/edit-shop/{shopId}")
-    public ResponseEntity<Optional<Shop>> editShop(@PathVariable Integer shopId, @RequestBody Shop shop) {
-        Optional<Shop> shop1 = shopService.findByIdShop(shopId);
-        if (!shop1.isPresent()) {
+    public ResponseEntity<Optional<Shop>> editShop(@PathVariable Integer shopId,@RequestBody Shop shop){
+        Optional<Shop> shop1= shopService.findByIdShop(shopId);
+        if(!shop1.isPresent()){
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         shop.setId(shop1.get().getId());
