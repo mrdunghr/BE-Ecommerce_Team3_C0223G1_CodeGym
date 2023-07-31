@@ -8,7 +8,8 @@ import java.util.Set;
 @Table(name = "brands")
 public class Brand extends IdBasedEntity {
 	
-	@Column(nullable = false, length = 45, unique = true)
+//	@Column(nullable = false, length = 45, unique = true)
+	@Column(nullable = false, length = 45)
 	private String name;
 	
 	@Column(nullable = false, length = 128)

@@ -68,4 +68,12 @@ public class CustomerService {
     public boolean existsByEmail(String email) {
         return customerRepository.existsByEmail(email);
     }
+
+    public void updateUserEnabledStatus(Integer id, boolean enabled){
+        customerRepository.updateEnabledStatus(id, enabled);
+    }
+
+    public void deleteCustomerById(Integer id) {
+        customerRepository.deleteById(id);
+    }
 }

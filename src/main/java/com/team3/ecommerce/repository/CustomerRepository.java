@@ -20,6 +20,9 @@ public interface CustomerRepository extends CrudRepository<Customer, Integer> {
 	@Modifying
 	public void updateAuthenticationType(Integer customerId, AuthenticationType type);
 	public Customer findByResetPasswordToken(String token);
+	@Query("UPDATE Customer c SET c.enabled = ?2 WHERE c.id = ?1")
+	@Modifying
+	public void updateEnabledStatus(Integer id, boolean enabled);
 
 	boolean existsByEmail(String email); // kiểm tra xem email tồn tại chưa
 

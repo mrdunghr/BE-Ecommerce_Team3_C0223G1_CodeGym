@@ -45,4 +45,7 @@ public class BrandService {
     public Brand save(Brand brand){
         return brandRepository.save(brand);
     }
+    public void deleteBrandsById(Integer id) {
+        brandRepository.deleteById(id);
+    }
 }
