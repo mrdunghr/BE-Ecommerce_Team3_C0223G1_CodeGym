@@ -179,7 +179,7 @@ public class ProductController {
     @GetMapping("/customer-list/{customerId}")
     public Page<Product> getAllProductsByCustomerId(@PathVariable Integer customerId,
                                                     @RequestParam(defaultValue = "0") Integer page,
-                                                    @RequestParam(defaultValue = "10") Integer size) {
+                                                    @RequestParam(defaultValue = "4") Integer size) {
         return productService.getAllProductsByCustomerId(customerId, page, size);
     }
 

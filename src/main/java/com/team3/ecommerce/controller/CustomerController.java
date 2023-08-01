@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -48,14 +49,13 @@ public class CustomerController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> LoginCustomer(@RequestBody Customer customer) {
-        Customer customer1 = customerService.findCustomerByEmail(customer.getEmail());
-        if (customer1 != null && customer1.getPassword().equals(customer.getPassword())) {
-            return new ResponseEntity<>(customer1, HttpStatus.ACCEPTED);
-        } else {
-            return ResponseEntity.badRequest().body("Wrong Email or Password");
-        }
+    public ResponseEntity<Customer> LoginCustomer(@RequestBody Customer customer, HttpSession session) {
+        Customer customerCheckLogin = customerService.findCustomerByEmail(customer.getEmail());
+            // Đăng nhập thành công, lưu thông tin khách hàng vào session
+            session.setAttribute("customerId", customerCheckLogin.getId());
+            return ResponseEntity.ok().body(customerCheckLogin);
     }
+
 
     @GetMapping("/list-country")
     public ResponseEntity<List<Country>> getCountryList() {
@@ -83,6 +83,13 @@ public class CustomerController {
         }
         customerService.deleteCustomerById(id);
         return ResponseEntity.ok("Customer deleted successfully.");
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout(HttpSession session) {
+        // Xóa thông tin khách hàng trong session để đăng xuất
+        session.removeAttribute("customerId");
+        return ResponseEntity.ok("Logout successful");
     }
 
 }
