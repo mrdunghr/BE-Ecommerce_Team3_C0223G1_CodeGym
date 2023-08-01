@@ -2,6 +2,7 @@ package com.team3.ecommerce.service;
 
 import com.team3.ecommerce.entity.Brand;
 import com.team3.ecommerce.entity.Category;
+import com.team3.ecommerce.entity.Customer;
 import com.team3.ecommerce.entity.Shop;
 import com.team3.ecommerce.entity.product.Product;
 import com.team3.ecommerce.entity.product.ProductImage;
@@ -152,5 +153,9 @@ public class ProductService {
 
     public boolean productIsExisted(Integer id) {
         return iProductRepository.existsById(id);
+    }
+
+    public List<Product> showProductByCustomer(Integer customerId) {
+        return iProductRepository.findByCustomerId(customerId);
     }
 }

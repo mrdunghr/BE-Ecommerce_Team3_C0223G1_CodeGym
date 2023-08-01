@@ -27,18 +27,20 @@ public class OrderService {
         float sub_total = 0;
         for(CartItem item : cartItemList){
             if(item.isChecked()){
-                OrderDetail orderDetail = new OrderDetail();
+                OrderDetail orderDetail = new OrderDetail(customer);
                 orderDetail.setOrder(order);
+                orderDetail.setCustomer(item.getCustomer());
                 orderDetail.setProduct(item.getProduct());
                 orderDetail.setQuantity(item.getQuantity());
                 orderDetail.setSubtotal(item.getSubtotal());
                 orderDetail.setProductCost(item.getProduct().getCost() * item.getQuantity());
                 orderDetail.setShippingCost(item.getShippingCost());
+                orderDetail.setStatus(OrderStatus.NEW);
                 orderDetail.setUnitPrice(orderDetail.getSubtotal() - orderDetail.getQuantity() * item.getProduct().getDiscountPercent()/100);
                 orderDetailSet.add(orderDetail);
                 product_cost += orderDetail.getProductCost();
                 sub_total += orderDetail.getSubtotal();
-                cartItemService.deleteCartItem(item);
+//                cartItemService.deleteCartItem(item);
             }
         }
         order.setOrderDetails(orderDetailSet);

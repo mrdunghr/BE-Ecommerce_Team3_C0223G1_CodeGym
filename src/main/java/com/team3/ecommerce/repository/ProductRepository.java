@@ -39,6 +39,7 @@ public interface ProductRepository extends JpaRepository<Product,Integer> {
 
     // hiển thị danh sách product của customer
     Page<Product> findByCustomerId(Integer customerId, Pageable pageable);
+    List<Product> findByCustomerId(Integer customerId);
 
     // hiển thị tất cả ảnh
     @Query("SELECT p.mainImage, pi.name as imageName FROM Product p LEFT JOIN p.images pi WHERE p.id = :productId")
