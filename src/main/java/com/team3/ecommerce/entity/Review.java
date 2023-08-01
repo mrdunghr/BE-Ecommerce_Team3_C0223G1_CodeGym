@@ -16,7 +16,7 @@ public class Review extends IdBasedEntity {
 	private String comment;
 	
 	private int rating;	
-	
+
 	private int votes;
 	
 	@Column(nullable = false)
