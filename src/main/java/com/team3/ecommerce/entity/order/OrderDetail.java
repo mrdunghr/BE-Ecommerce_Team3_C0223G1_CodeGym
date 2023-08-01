@@ -1,13 +1,12 @@
 package com.team3.ecommerce.entity.order;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.team3.ecommerce.entity.Category;
+import com.team3.ecommerce.entity.Customer;
 import com.team3.ecommerce.entity.IdBasedEntity;
 import com.team3.ecommerce.entity.product.Product;
 
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "order_details")
@@ -17,16 +16,59 @@ public class OrderDetail extends IdBasedEntity {
 	private float shippingCost;
 	private float unitPrice;
 	private float subtotal;
-	
+	@Enumerated(EnumType.STRING)
+	private OrderStatus status = OrderStatus.NEW;
+	@ManyToOne
+	@JoinColumn(name = "customer_id")
+	private Customer customer;
 	@ManyToOne
 	@JoinColumn(name = "product_id")
 	private Product product;
-	
+
+	public OrderDetail(int quantity, float productCost, float shippingCost, float unitPrice, float subtotal, OrderStatus status, Customer customer, Product product, Order order) {
+		this.quantity = quantity;
+		this.productCost = productCost;
+		this.shippingCost = shippingCost;
+		this.unitPrice = unitPrice;
+		this.subtotal = subtotal;
+		this.status = status;
+		this.customer = customer;
+		this.product = product;
+		this.order = order;
+	}
+
+	public OrderStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(OrderStatus status) {
+		this.status = status;
+	}
+
+	public Customer getCustomer() {
+		return customer;
+	}
+
+	public void setCustomer(Customer customer) {
+		this.customer = customer;
+	}
+
 	@ManyToOne
+	@JsonIgnore
 	@JoinColumn(name = "order_id")
 	private Order order;
-	
+
 	public OrderDetail() {
+	}
+
+	public OrderDetail(int quantity, float productCost, float shippingCost, float unitPrice, float subtotal, Product product, Order order) {
+		this.quantity = quantity;
+		this.productCost = productCost;
+		this.shippingCost = shippingCost;
+		this.unitPrice = unitPrice;
+		this.subtotal = subtotal;
+		this.product = product;
+		this.order = order;
 	}
 
 	public OrderDetail(String categoryName, int quantity, float productCost, float shippingCost, float subtotal) {
@@ -37,14 +79,14 @@ public class OrderDetail extends IdBasedEntity {
 		this.shippingCost = shippingCost;
 		this.subtotal = subtotal;
 	}
-	
+
 	public OrderDetail(int quantity, String productName, float productCost, float shippingCost, float subtotal) {
 		this.product = new Product(productName);
 		this.quantity = quantity;
 		this.productCost = productCost * quantity;
 		this.shippingCost = shippingCost;
 		this.subtotal = subtotal;
-	}	
+	}
 
 	public int getQuantity() {
 		return quantity;
@@ -101,7 +143,7 @@ public class OrderDetail extends IdBasedEntity {
 	public void setOrder(Order order) {
 		this.order = order;
 	}
-	
-	
+
+
 }
 

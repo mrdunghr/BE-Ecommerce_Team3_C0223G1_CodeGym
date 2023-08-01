@@ -1,11 +1,14 @@
-package com.team3.ecommerce.service;
+package com.team3.ecommerce.service.hieu;
 
 import com.team3.ecommerce.entity.CartItem;
 import com.team3.ecommerce.entity.Customer;
 import com.team3.ecommerce.entity.order.*;
-import com.team3.ecommerce.repository.OrderDetailRepository;
+import com.team3.ecommerce.repository.OrderDetailsRepository;
 import com.team3.ecommerce.repository.OrderRepository;
+import com.team3.ecommerce.service.CartItemService;
+import com.team3.ecommerce.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.relational.core.sql.In;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -14,8 +17,7 @@ import java.util.*;
 public class OrderDetailService {
 
     @Autowired
-    private OrderDetailRepository OrderDetailRepo;
-
+    private OrderDetailsRepository orderDetailsRepository;
     @Autowired
     private OrderRepository orderRepository;
 
@@ -29,6 +31,7 @@ public class OrderDetailService {
         Order order = new Order();
         List<CartItem> cartItemList = cartItemService.getCartItemByCustomerId(id);
         Set<OrderDetail> orderDetailSet = new HashSet<>();
+        Set<OrderDetail> orderDetails = new HashSet<>();
         for(CartItem item : cartItemList){
             if(item.isChecked()){
                 OrderDetail orderDetail = new OrderDetail();
@@ -39,10 +42,12 @@ public class OrderDetailService {
                 orderDetail.setShippingCost(12);
                 orderDetail.setUnitPrice(item.getProduct().getPrice() - (item.getProduct().getPrice() * item.getProduct().getDiscountPrice()/100));
                 orderDetailSet.add(orderDetail);
+                orderDetail.setCustomer(item.getCustomer());
+                orderDetail.setStatus(OrderStatus.NEW);
                 cartItemService.deleteCartItem(item);
             }
         }
-        order.setOrderDetails(orderDetailSet);
+//        order.setOrderDetails(orderDetailSet);
         order.setOrderTracks(new ArrayList<OrderTrack>());
         order.setCustomer(customer);
         order.setCountry(customer.getCountry().getName());
@@ -59,8 +64,23 @@ public class OrderDetailService {
         order.setOrderTime(new Date());
         order.setDeliverDate(new Date());
         orderRepository.save(order);
-
+        Order order1 = orderRepository.findLatestOrderByCustomerId(id);
+        for (OrderDetail od : orderDetailSet){
+            od.setOrder(order1);
+            orderDetails.add(od);
+        }
+        orderDetailsRepository.saveAll(orderDetails);
         return order;
     }
+    public List<Order> getListOrderDetailByCustomerId(Integer customerId){
+        return orderRepository.findAllByCustomer(customerId);
+    }
 
+    public OrderDetail getOrderById(Integer id){
+        return orderDetailsRepository.findById(id).get();
+    }
+
+    public void saveOrder(OrderDetail orderDetail){
+        orderDetailsRepository.save(orderDetail);
+    }
 }

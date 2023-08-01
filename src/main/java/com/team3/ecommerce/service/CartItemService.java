@@ -25,5 +25,10 @@ public class CartItemService {
 
         cardItemRepository.delete(cartItem);
     }
-
+    public void saveAll(List<CartItem> items){
+        cardItemRepository.saveAll(items);
+    }
+    public void deleteCartItemById(int id){
+        cardItemRepository.deleteById(id);
+    }
 }

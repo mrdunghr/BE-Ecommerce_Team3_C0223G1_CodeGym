@@ -91,4 +91,30 @@ public class cartController {
         cartItemService.saveCartItem(cartItem);
         return ResponseEntity.ok("OK");
     }
+
+    @PutMapping("/checked-all-item/{checked}/{customerId}")
+    public ResponseEntity<?> checkedAll(@PathVariable String checked ,@PathVariable Integer customerId){
+        List<CartItem> list = cartItemService.getCartItemByCustomerId(customerId);
+        switch (checked){
+            case "checked":
+                for (CartItem item : list){
+                    item.setChecked(true);
+                }
+                cartItemService.saveAll(list);
+                break;
+            case "unchecked":
+                for (CartItem item : list){
+                    item.setChecked(false);
+                }
+                cartItemService.saveAll(list);
+                break;
+        }
+        return ResponseEntity.ok("OK");
+    }
+
+    @DeleteMapping("/remove-item/{itemId}")
+    public ResponseEntity<?> removeItemfromCart(@PathVariable Integer itemId){
+        cartItemService.deleteCartItemById(itemId);
+        return ResponseEntity.ok("OK");
+    }
 }

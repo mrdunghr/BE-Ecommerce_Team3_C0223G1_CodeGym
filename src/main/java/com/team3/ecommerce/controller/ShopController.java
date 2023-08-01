@@ -2,7 +2,6 @@ package com.team3.ecommerce.controller;
 
 import com.team3.ecommerce.entity.Customer;
 import com.team3.ecommerce.entity.Shop;
-import com.team3.ecommerce.entity.product.Product;
 import com.team3.ecommerce.repository.IShopRepository;
 import com.team3.ecommerce.service.CustomerService;
 import com.team3.ecommerce.service.ShopService;
@@ -35,8 +34,8 @@ public class ShopController {
     public ResponseEntity<Page<Shop>> findAll(@RequestParam(name = "page", defaultValue = "0") int page,
                                               @RequestParam(name = "size", defaultValue = "3") int size){
         Pageable pageable = PageRequest.of(page, size);
-          Page<Shop> shop = shopService.findAllShop(pageable);
-          return new ResponseEntity<>(shop, HttpStatus.OK);
+        Page<Shop> shop = shopService.findAllShop(pageable);
+        return new ResponseEntity<>(shop, HttpStatus.OK);
     }
 
     // tạo shop mới
@@ -82,9 +81,9 @@ public class ShopController {
     public ResponseEntity<Optional<Shop>> editShop(@PathVariable Integer shopId,@RequestBody Shop shop){
         Optional<Shop> shop1= shopService.findByIdShop(shopId);
         if(!shop1.isPresent()){
-               return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-       shop.setId(shop1.get().getId());
+        shop.setId(shop1.get().getId());
         shopService.updateShop(shop);
         return new ResponseEntity<>(HttpStatus.OK);
     }

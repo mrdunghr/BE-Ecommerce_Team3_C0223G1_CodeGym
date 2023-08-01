@@ -2,7 +2,6 @@ package com.team3.ecommerce.controller;
 
 import com.team3.ecommerce.entity.Country;
 import com.team3.ecommerce.entity.Customer;
-import com.team3.ecommerce.entity.User;
 import com.team3.ecommerce.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @RestController
@@ -49,47 +47,19 @@ public class CustomerController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Customer> LoginCustomer(@RequestBody Customer customer, HttpSession session) {
+    public ResponseEntity<Customer> LoginCustomer(@RequestBody Customer customer) {
         Customer customerCheckLogin = customerService.findCustomerByEmail(customer.getEmail());
-            // Đăng nhập thành công, lưu thông tin khách hàng vào session
-            session.setAttribute("customerId", customerCheckLogin.getId());
+        if (customerCheckLogin != null && customerCheckLogin.getPassword().equals(customer.getPassword())) {
             return ResponseEntity.ok().body(customerCheckLogin);
+        } else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
 
     @GetMapping("/list-country")
     public ResponseEntity<List<Country>> getCountryList() {
         return new ResponseEntity<>(customerService.listAllCountries(), HttpStatus.OK);
-    }
-    @PutMapping("/{id}/enabled/{status}")
-    public ResponseEntity<String> updateUserEnabledStatus(@PathVariable("id") Integer id, @PathVariable("status") boolean enabled) {
-        try {
-            customerService.updateUserEnabledStatus(id, enabled);
-            String status = enabled ? "enabled" : "disabled";
-            String message = "The customer ID " + id + " has been " + status;
-            return ResponseEntity.ok(message);
-        } catch (NoSuchElementException e) {
-            return ResponseEntity.notFound().build();
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteUser(@PathVariable Integer id) {
-        Customer existingCustomer = customerService.findById(id).get();
-        if (existingCustomer == null) {
-            return ResponseEntity.notFound().build();
-        }
-        customerService.deleteCustomerById(id);
-        return ResponseEntity.ok("Customer deleted successfully.");
-    }
-
-    @PostMapping("/logout")
-    public ResponseEntity<String> logout(HttpSession session) {
-        // Xóa thông tin khách hàng trong session để đăng xuất
-        session.removeAttribute("customerId");
-        return ResponseEntity.ok("Logout successful");
     }
 
 }

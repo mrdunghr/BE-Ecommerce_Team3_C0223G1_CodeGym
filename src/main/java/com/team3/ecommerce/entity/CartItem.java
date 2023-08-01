@@ -23,7 +23,6 @@ public class CartItem extends IdBasedEntity {
 	private float shippingCost;
 
 	private boolean checked = false;
-
 	public boolean isChecked() {
 		return checked;
 	}
@@ -31,7 +30,7 @@ public class CartItem extends IdBasedEntity {
 	public void setChecked(boolean checked) {
 		this.checked = checked;
 	}
-
+	
 	public CartItem() {
 	}
 
@@ -78,6 +77,4 @@ public class CartItem extends IdBasedEntity {
 	public void setShippingCost(float shippingCost) {
 		this.shippingCost = shippingCost;
 	}
-	
-	
 }
