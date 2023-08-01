@@ -1,6 +1,7 @@
 package com.team3.ecommerce.entity.order;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.team3.ecommerce.entity.IdBasedEntity;
 
 import javax.persistence.*;
@@ -24,6 +25,7 @@ public class OrderTrack extends IdBasedEntity {
 	
 	@ManyToOne
 	@JoinColumn(name = "order_id")
+	@JsonIgnore
 	private Order order;
 
 	public String getNotes() {

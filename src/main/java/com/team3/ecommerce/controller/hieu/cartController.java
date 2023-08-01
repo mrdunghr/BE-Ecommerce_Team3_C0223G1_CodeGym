@@ -111,4 +111,10 @@ public class cartController {
         }
         return ResponseEntity.ok("OK");
     }
+
+    @DeleteMapping("/remove-item/{itemId}")
+    public ResponseEntity<?> removeItemfromCart(@PathVariable Integer itemId){
+        cartItemService.deleteCartItemById(itemId);
+        return ResponseEntity.ok("OK");
+    }
 }

@@ -6,7 +6,9 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
-public interface OrderDetailsRepository extends JpaRepository<OrderDetail, Long> {
-@Query("SELECT od FROM OrderDetail od JOIN od.product p JOIN p.shop s WHERE s.id = ?1")
-List<OrderDetail> findOrderDetailByShopId(Integer shopId);
-        }
+public interface OrderDetailsRepository extends JpaRepository<OrderDetail, Integer> {
+        @Query("SELECT od FROM OrderDetail od JOIN od.product p JOIN p.shop s WHERE s.id = ?1")
+        List<OrderDetail> findOrderDetailByShopId(Integer shopId);
+
+
+}

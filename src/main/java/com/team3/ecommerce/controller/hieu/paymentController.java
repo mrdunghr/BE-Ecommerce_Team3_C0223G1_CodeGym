@@ -1,8 +1,7 @@
 package com.team3.ecommerce.controller.hieu;
 
-import com.team3.ecommerce.entity.Customer;
 import com.team3.ecommerce.entity.order.Order;
-import com.team3.ecommerce.service.OrderDetailService;
+import com.team3.ecommerce.service.hieu.OrderDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

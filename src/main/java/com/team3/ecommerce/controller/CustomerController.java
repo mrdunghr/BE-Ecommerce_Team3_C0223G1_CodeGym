@@ -47,12 +47,12 @@ public class CustomerController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> LoginCustomer(@RequestBody Customer customer) {
+    public ResponseEntity<Customer> LoginCustomer(@RequestBody Customer customer) {
         Customer customerCheckLogin = customerService.findCustomerByEmail(customer.getEmail());
         if (customerCheckLogin != null && customerCheckLogin.getPassword().equals(customer.getPassword())) {
-            return ResponseEntity.ok().body("Success");
+            return ResponseEntity.ok().body(customerCheckLogin);
         } else {
-            return ResponseEntity.badRequest().body("Wrong Email or Password");
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
