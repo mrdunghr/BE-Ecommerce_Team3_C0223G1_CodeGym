@@ -93,27 +93,22 @@ public class CartItemController {
         return ResponseEntity.ok("OK");
     }
     // xóa sản phẩm khỏi giỏ hàng
-    @DeleteMapping("/{id_customer}/delete-product")
-    public ResponseEntity<List<CartItem>> deleteProduct(@PathVariable Integer id_customer,@RequestParam Integer productId) {
+    @DeleteMapping("/delete-product/{id_cartItem}")
+    public ResponseEntity<String> deleteProduct(@PathVariable Integer id_cartItem) {
+        // Kiểm tra nếu id_cartItem không hợp lệ (null) thì trả về mã lỗi 400 Bad Request
+        if (id_cartItem == null) {
+            return ResponseEntity.badRequest().build();
+        }
 
-        if (id_customer == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        // Kiểm tra xem cart item có tồn tại trong cartItemService hay không
+        if (!cartItemService.exists(id_cartItem)) {
+            // Nếu không tìm thấy cart item với id_cartItem, trả về mã lỗi 404 Not Found
+            return ResponseEntity.notFound().build();
         }
-        List<CartItem> cartItems = cartItemService.getCartItemByCustomerId(id_customer);
-        int productIndexToRemove = -1;
-        for (int i = 0; i < cartItems.size(); i++) {
-            if (cartItems.get(i).getProduct().getId().equals(productId)) {
-                productIndexToRemove = i;
-                break;
-            }
-        }
-        if (productIndexToRemove != -1) {
-            cartItemService.deleteCartItem(cartItems.get(productIndexToRemove));
-            cartItems.remove(cartItems.get(productIndexToRemove));
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(cartItems);
-        }
-        return ResponseEntity.ok(cartItems);
+
+        // Xóa cart item dựa trên id_cartItem và cập nhật vào cartItemService
+        cartItemService.deleteCartItemById(id_cartItem);
+
+        return ResponseEntity.ok("Delete success");
     }
-
 }

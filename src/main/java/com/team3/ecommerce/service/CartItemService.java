@@ -24,4 +24,13 @@ public class CartItemService {
     public void deleteCartItem(CartItem cartItem) {
         cardItemRepository.delete(cartItem);
     }
+
+    public boolean exists(Integer id_cartItem) {
+        return cardItemRepository.existsById(id_cartItem);
+    }
+
+    public void deleteCartItemById(Integer idCartItem) {
+        CartItem item = cardItemRepository.findById(idCartItem).get();
+        deleteCartItem(item);
+    }
 }
