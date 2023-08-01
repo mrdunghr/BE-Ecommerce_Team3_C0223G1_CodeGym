@@ -39,7 +39,7 @@ public class CartItemController {
         if (!productService.productIsExisted(cartItem.getProduct().getId())) {
             return ResponseEntity.notFound().build();
         }
-        if (!cartItem.getProduct().isEnabled()) {
+        if (!productService.findById(cartItem.getProduct().getId()).get().isEnabled()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
         // lấy danh sách các mặt hàng có trong giỏ hàng của khách hàng dựa vào customerId và productId
