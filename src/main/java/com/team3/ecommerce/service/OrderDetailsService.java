@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -16,5 +17,11 @@ public class OrderDetailsService {
 
     public List<OrderDetail> getListOrderByShopId(Integer id){
         return iOrderDetailsRepository.findOrderDetailByShopId(id);
+    }
+    public Optional<OrderDetail> findById(Integer id) {
+        return iOrderDetailsRepository.findById(id);
+    }
+    public void saveOrderDetail(OrderDetail orderDetail) {
+        iOrderDetailsRepository.save(orderDetail);
     }
 }

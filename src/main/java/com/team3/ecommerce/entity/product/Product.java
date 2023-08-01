@@ -33,7 +33,18 @@ public class Product extends IdBasedEntity {
 	
 	@Column(name = "in_stock")
 	private boolean inStock;
-	
+
+	@Column(name = "inventory")
+	private Integer inventory;
+
+	public Integer getInventory() {
+		return inventory;
+	}
+
+	public void setInventory(Integer inventory) {
+		this.inventory = inventory;
+	}
+
 	public Customer getCustomer() {
 		return customer;
 	}
