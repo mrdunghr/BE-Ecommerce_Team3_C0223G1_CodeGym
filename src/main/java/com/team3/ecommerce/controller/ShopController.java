@@ -56,7 +56,7 @@ public class ShopController {
         newShop.setAlias(shop.getAlias());
         newShop.setImage(shop.getImage());
         newShop.setDeliveryAddress(shop.getDeliveryAddress());
-        newShop.setEnabled(true);
+        newShop.setEnabled(false);
         newShop.setCreatedTime(new Date());
         newShop.setCustomer(customer);
 
