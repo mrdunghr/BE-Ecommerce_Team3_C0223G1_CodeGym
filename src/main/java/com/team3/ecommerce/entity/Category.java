@@ -26,17 +26,17 @@ public class Category extends IdBasedEntity {
 	private String allParentIDs;
 
 
-	@Transient
-	@OneToOne
-	@JsonBackReference
-	@JoinColumn(name = "parent_id")
-	private Category parent;
-
-	@Transient
-	@OneToMany(mappedBy = "parent", fetch = FetchType.EAGER)
-	@JsonIgnoreProperties("children")
-	@OrderBy("name asc")
-	private Set<Category> children = new HashSet<>();
+//	@Transient
+//	@OneToOne
+//	@JsonBackReference
+//	@JoinColumn(name = "parent_id")
+//	private Category parent;
+//
+//	@Transient
+//	@OneToMany(mappedBy = "parent", fetch = FetchType.EAGER)
+//	@JsonIgnoreProperties("children")
+//	@OrderBy("name asc")
+//	private Set<Category> children = new HashSet<>();
 
 
 	public Category() {
