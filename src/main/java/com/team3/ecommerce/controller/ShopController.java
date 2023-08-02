@@ -44,6 +44,7 @@ public class ShopController {
         // Lấy thông tin khách hàng từ đối tượng Shop
         Customer customer = shop.getCustomer();
 
+        // Kiểm tra xem người dùng đã có shop hay chưa
         List<Shop> existingShops = (List<Shop>) shopService.findShopList(customer);
         if (!existingShops.isEmpty()) {
             // Người dùng đã có shop, có thể hiển thị thông báo lỗi hoặc cơ hội chỉnh sửa shop hiện có
