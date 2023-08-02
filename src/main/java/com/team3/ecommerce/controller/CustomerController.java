@@ -62,12 +62,16 @@ public class CustomerController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Customer> LoginCustomer(@RequestBody Customer customer) {
+    public ResponseEntity<?> LoginCustomer(@RequestBody Customer customer) {
         Customer customerCheckLogin = customerService.findCustomerByEmail(customer.getEmail());
         if (customerCheckLogin != null && customerCheckLogin.getPassword().equals(customer.getPassword())) {
-            return ResponseEntity.ok().body(customerCheckLogin);
+            if (customerCheckLogin.isEnabled()) {
+                return ResponseEntity.ok().body(customerCheckLogin);
+            } else {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Account has not been activated");
+            }
         } else {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Wrong Account Or Password", HttpStatus.BAD_REQUEST);
         }
     }
 
