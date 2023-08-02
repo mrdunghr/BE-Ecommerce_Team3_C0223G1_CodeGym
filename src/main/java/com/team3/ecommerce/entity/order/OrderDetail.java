@@ -16,11 +16,20 @@ public class OrderDetail extends IdBasedEntity {
 	private float shippingCost;
 	private float unitPrice;
 	private float subtotal;
-	@Enumerated(EnumType.STRING)
-	private OrderStatus status = OrderStatus.NEW;
+
 	@ManyToOne
 	@JoinColumn(name = "customer_id")
 	private Customer customer;
+
+
+	@Enumerated(EnumType.STRING)
+	private OrderStatus status;
+
+	public OrderDetail() {
+
+	}
+
+
 	@ManyToOne
 	@JoinColumn(name = "product_id")
 	private Product product;
@@ -58,7 +67,8 @@ public class OrderDetail extends IdBasedEntity {
 	@JoinColumn(name = "order_id")
 	private Order order;
 
-	public OrderDetail() {
+	public OrderDetail(Customer customer) {
+		this.customer = customer;
 	}
 
 	public OrderDetail(int quantity, float productCost, float shippingCost, float unitPrice, float subtotal, Product product, Order order) {
@@ -71,7 +81,10 @@ public class OrderDetail extends IdBasedEntity {
 		this.order = order;
 	}
 
-	public OrderDetail(String categoryName, int quantity, float productCost, float shippingCost, float subtotal) {
+
+
+	public OrderDetail(String categoryName, int quantity, float productCost, float shippingCost, float subtotal, Customer customer) {
+		this.customer = customer;
 		this.product = new Product();
 		this.product.setCategory(new Category(categoryName));
 		this.quantity = quantity;
@@ -80,9 +93,10 @@ public class OrderDetail extends IdBasedEntity {
 		this.subtotal = subtotal;
 	}
 
-	public OrderDetail(int quantity, String productName, float productCost, float shippingCost, float subtotal) {
+	public OrderDetail(int quantity, String productName, float productCost, float shippingCost, float subtotal, Customer customer) {
 		this.product = new Product(productName);
 		this.quantity = quantity;
+		this.customer = customer;
 		this.productCost = productCost * quantity;
 		this.shippingCost = shippingCost;
 		this.subtotal = subtotal;

@@ -22,17 +22,25 @@ public class OrderService {
         Order order = new Order();
         List<CartItem> cartItemList = cartItemService.getCartItemByCustomerId(id);
         Set<OrderDetail> orderDetailSet = new HashSet<>();
+
+        float product_cost = 0;
+        float sub_total = 0;
         for(CartItem item : cartItemList){
             if(item.isChecked()){
-                OrderDetail orderDetail = new OrderDetail();
+                OrderDetail orderDetail = new OrderDetail(customer);
+                orderDetail.setOrder(order);
+                orderDetail.setCustomer(item.getCustomer());
                 orderDetail.setProduct(item.getProduct());
                 orderDetail.setQuantity(item.getQuantity());
-                orderDetail.setSubtotal(12);
-                orderDetail.setProductCost(item.getProduct().getCost());
-                orderDetail.setShippingCost(12);
-                orderDetail.setUnitPrice(item.getProduct().getPrice() - (item.getProduct().getPrice() * item.getProduct().getDiscountPrice()/100));
+                orderDetail.setSubtotal(item.getSubtotal());
+                orderDetail.setProductCost(item.getProduct().getCost() * item.getQuantity());
+                orderDetail.setShippingCost(item.getShippingCost());
+                orderDetail.setStatus(OrderStatus.NEW);
+                orderDetail.setUnitPrice(orderDetail.getSubtotal() - orderDetail.getQuantity() * item.getProduct().getDiscountPercent()/100);
                 orderDetailSet.add(orderDetail);
-                cartItemService.deleteCartItem(item);
+                product_cost += orderDetail.getProductCost();
+                sub_total += orderDetail.getSubtotal();
+//                cartItemService.deleteCartItem(item);
             }
         }
         order.setOrderDetails(orderDetailSet);
@@ -51,6 +59,10 @@ public class OrderService {
         order.setAddressLine2(customer.getAddressLine2());
         order.setOrderTime(new Date());
         order.setDeliverDate(new Date());
+
+        order.setProductCost(product_cost);
+        order.setSubtotal(sub_total);
+        order.setTotal(order.getSubtotal() + order.getProductCost() + order.getTax() + order.getShippingCost());
         orderRepository.save(order);
 
         return order;
