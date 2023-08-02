@@ -22,6 +22,10 @@ public class OrderDetailsController {
 
     @Autowired
     private ProductService productService;
+    @GetMapping("/{id}")
+    public ResponseEntity<List<OrderDetail>> getListOrderByShopId(@PathVariable Integer id) {
+        return ResponseEntity.ok(oderDetailsService.getListOrderByShopId(id));
+    }
     @GetMapping("/{customerId}")
     public ResponseEntity<List<Order>> getCustomerOrder(@PathVariable Integer customerId){
         return new ResponseEntity<>(oderDetailsService.getListOrderDetailByCustomerId(customerId), HttpStatus.OK);

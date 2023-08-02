@@ -93,4 +93,7 @@ public class OrderDetailsService {
     public void saveOrder(OrderDetail orderDetail){
         orderDetailsRepository.save(orderDetail);
     }
+    public List<OrderDetail> getListOrderByShopId(Integer id){
+        return orderDetailsRepository.findOrderDetailByShopId(id);
+    }
 }
