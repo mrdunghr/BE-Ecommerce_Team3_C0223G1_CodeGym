@@ -26,14 +26,14 @@ public class OrderDetailService {
     @Autowired
     private CustomerService customerService;
 
-    public Order createOrder(int id){
+    public Order createOrder(int id) throws Exception{
         Customer customer =customerService.getCustomerById(id).get();
         Order order = new Order();
         List<CartItem> cartItemList = cartItemService.getCartItemByCustomerId(id);
         Set<OrderDetail> orderDetailSet = new HashSet<>();
         Set<OrderDetail> orderDetails = new HashSet<>();
         for(CartItem item : cartItemList){
-            if(item.isChecked()){
+            if(item.isChecked() && item.getProduct().isEnabled()){
                 OrderDetail orderDetail = new OrderDetail();
                 orderDetail.setProduct(item.getProduct());
                 orderDetail.setQuantity(item.getQuantity());
@@ -45,6 +45,8 @@ public class OrderDetailService {
                 orderDetail.setCustomer(item.getCustomer());
                 orderDetail.setStatus(OrderStatus.NEW);
                 cartItemService.deleteCartItem(item);
+            }else if(item.isChecked() && !item.getProduct().isEnabled()){
+                throw new Exception("The product is disable!");
             }
         }
 //        order.setOrderDetails(orderDetailSet);
@@ -76,11 +78,24 @@ public class OrderDetailService {
         return orderRepository.findAllByCustomer(customerId);
     }
 
+    public List<CartItem> getDisableList(Integer customerId){
+        List<CartItem> customerCartItem = cartItemService.getCartItemByCustomerId(customerId);
+        List<CartItem> disabledItem = new ArrayList<>();
+        for(CartItem item : customerCartItem){
+            if (item.isChecked() && !item.getProduct().isEnabled()){
+                disabledItem.add(item);
+            }
+        }
+        return disabledItem;
+    }
+
     public OrderDetail getOrderById(Integer id){
         return orderDetailsRepository.findById(id).get();
     }
 
     public void saveOrder(OrderDetail orderDetail){
+
+
         orderDetailsRepository.save(orderDetail);
     }
 }
