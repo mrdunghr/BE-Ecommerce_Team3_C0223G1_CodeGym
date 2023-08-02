@@ -65,5 +65,19 @@ public class OrderDetailsController {
             return new ResponseEntity<>("Cannot process order, it is not in NEW status!", HttpStatus.BAD_REQUEST);
         }
     }
+    @PostMapping("/{orderId}/paid")
+    public ResponseEntity<String> paidOrder(@PathVariable Integer orderId) {
+        OrderDetail orderUpdate = orderDetailsService.findById(orderId).get();
+        if (orderUpdate == null) {
+            return new ResponseEntity<>("Order not found!", HttpStatus.NOT_FOUND);
+        }
+        if (orderUpdate.getStatus() == OrderStatus.PROCESSING) {
+            orderUpdate.setStatus(OrderStatus.PAID);
+            orderDetailsService.saveOrderDetail(orderUpdate);
+            return new ResponseEntity<>("Order is being paid!",HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Cannot paid order", HttpStatus.BAD_REQUEST);
+        }
+    }
 
 }
