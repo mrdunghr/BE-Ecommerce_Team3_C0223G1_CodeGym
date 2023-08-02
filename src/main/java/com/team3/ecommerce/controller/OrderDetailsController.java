@@ -22,63 +22,61 @@ public class OrderDetailsController {
         return ResponseEntity.ok(orderDetailsService.getListOrderByShopId(id));
     }
     // thay đổi trạng thái đơn hàng
-    @PostMapping("/{id}/cancel")
-    public ResponseEntity<String> cancelOrder(@PathVariable Integer id) {
-        OrderDetail orderDetail = orderDetailsService.findById(id).get();
-        if (orderDetail == null) {
-            return new ResponseEntity<>("Order not found!", HttpStatus.NOT_FOUND);
-        }
-        if (orderDetail.getStatus() == OrderStatus.NEW) {
-            orderDetail.setStatus(OrderStatus.CANCELLED);
-            orderDetailsService.saveOrderDetail(orderDetail);
-            return ResponseEntity.status(HttpStatus.OK).body("Order cancelled successfully!");
-        } else {
-            return ResponseEntity.badRequest().body("Cannot cancel order, it is not in NEW status!");
-        }
-    }
-    @PostMapping("/{orderId}/process")
-    public ResponseEntity<String> processOrder(@PathVariable Integer orderId) {
-        OrderDetail orderToUpdate = orderDetailsService.findById(orderId).get();
+    @PostMapping("/{orderId}/update_status")
+    public ResponseEntity<String> updateOrderStatus(@PathVariable Integer orderId, @RequestParam("action") String action) {
+        OrderDetail orderToUpdate = orderDetailsService.findById(orderId).orElse(null);
         if (orderToUpdate == null) {
             return new ResponseEntity<>("Order not found!", HttpStatus.NOT_FOUND);
         }
 
-        if (orderToUpdate.getStatus() == OrderStatus.CANCELLED) {
-            // Đơn hàng đã bị hủy, không thể tiếp tục xử lý
-            return new ResponseEntity<>("Cannot process order, it is already cancelled!", HttpStatus.BAD_REQUEST);
-        } else if (orderToUpdate.getStatus() == OrderStatus.NEW) {
-            // Kiểm tra trạng thái trong kho
-            boolean isInStock = orderToUpdate.getProduct().isInStock();
-
-            if (!isInStock) {
-                // Tiến hành xử lý đơn hàng
-                orderToUpdate.setStatus(OrderStatus.PROCESSING);
-                orderDetailsService.saveOrderDetail(orderToUpdate);
-                return new ResponseEntity<>("Order is being processed!", HttpStatus.OK);
-            } else {
-                // Không còn hàng trong kho, hủy đơn hàng
-                orderToUpdate.setStatus(OrderStatus.CANCELLED);
-                orderDetailsService.saveOrderDetail(orderToUpdate);
-                return new ResponseEntity<>("Order cancelled due to out of stock!", HttpStatus.BAD_REQUEST);
-            }
-        } else {
-            // Đơn hàng không ở trạng thái NEW hoặc CANCELLED, không thể tiếp tục xử lý
-            return new ResponseEntity<>("Cannot process order, it is not in NEW status!", HttpStatus.BAD_REQUEST);
+        switch (action) {
+            // hủy đơn
+            case "cancel":
+                if (orderToUpdate.getStatus() == OrderStatus.NEW) {
+                    orderToUpdate.setStatus(OrderStatus.CANCELLED);
+                    orderDetailsService.saveOrderDetail(orderToUpdate);
+                    return ResponseEntity.ok("Order cancelled successfully!");
+                } else {
+                    return ResponseEntity.badRequest().body("Cannot cancel order, it is not in NEW status!");
+                }
+                //thực hiện đơn hàng
+            case "process":
+                if (orderToUpdate.getStatus() == OrderStatus.CANCELLED) {
+                    return new ResponseEntity<>("Cannot process order, it is already cancelled!", HttpStatus.BAD_REQUEST);
+                } else if (orderToUpdate.getStatus() == OrderStatus.NEW) {
+                    boolean isInStock = orderToUpdate.getProduct().isInStock();
+                    if (!isInStock) {
+                        orderToUpdate.setStatus(OrderStatus.PROCESSING);
+                        orderDetailsService.saveOrderDetail(orderToUpdate);
+                        return ResponseEntity.ok("Order is being processed!");
+                    } else {
+                        orderToUpdate.setStatus(OrderStatus.CANCELLED);
+                        orderDetailsService.saveOrderDetail(orderToUpdate);
+                        return new ResponseEntity<>("Order cancelled due to out of stock!", HttpStatus.BAD_REQUEST);
+                    }
+                } else {
+                    return new ResponseEntity<>("Cannot process order, it is not in NEW status!", HttpStatus.BAD_REQUEST);
+                }
+            case "return":
+                if (orderToUpdate.getStatus() == OrderStatus.PROCESSING) {
+                    orderToUpdate.setStatus(OrderStatus.RETURNED);
+                    orderDetailsService.saveOrderDetail(orderToUpdate);
+                    return ResponseEntity.ok("Order is being return!");
+                }
+                else {
+                    return ResponseEntity.badRequest().body("Cannot return order");
+                }
+                // đơn hàng thành công
+            case "paid":
+                if (orderToUpdate.getStatus() == OrderStatus.PROCESSING) {
+                    orderToUpdate.setStatus(OrderStatus.PAID);
+                    orderDetailsService.saveOrderDetail(orderToUpdate);
+                    return ResponseEntity.ok("Order is being paid!");
+                } else {
+                    return ResponseEntity.badRequest().body("Cannot pay for the order, it is not in PROCESSING status!");
+                }
+            default:
+                return ResponseEntity.badRequest().body("Invalid action!");
         }
     }
-    @PostMapping("/{orderId}/paid")
-    public ResponseEntity<String> paidOrder(@PathVariable Integer orderId) {
-        OrderDetail orderUpdate = orderDetailsService.findById(orderId).get();
-        if (orderUpdate == null) {
-            return new ResponseEntity<>("Order not found!", HttpStatus.NOT_FOUND);
-        }
-        if (orderUpdate.getStatus() == OrderStatus.PROCESSING) {
-            orderUpdate.setStatus(OrderStatus.PAID);
-            orderDetailsService.saveOrderDetail(orderUpdate);
-            return new ResponseEntity<>("Order is being paid!",HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>("Cannot paid order", HttpStatus.BAD_REQUEST);
-        }
-    }
-
 }
