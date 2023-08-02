@@ -22,7 +22,7 @@ public class OrderDetailsController {
 
     @Autowired
     private ProductService productService;
-    @GetMapping("/{id}")
+    @GetMapping("/shop/{id}")
     public ResponseEntity<List<OrderDetail>> getListOrderByShopId(@PathVariable Integer id) {
         return ResponseEntity.ok(oderDetailsService.getListOrderByShopId(id));
     }
