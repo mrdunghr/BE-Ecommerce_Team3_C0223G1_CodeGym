@@ -33,7 +33,52 @@ public class Product extends IdBasedEntity {
 	
 	@Column(name = "in_stock")
 	private boolean inStock;
-	
+
+
+	private int quantity;
+
+
+	public Product(String name, String alias, String shortDescription, String fullDescription, Date createdTime, Date updatedTime, boolean enabled, boolean inStock, int quantity, float cost, float price, float discountPercent, float length, float width, float height, float weight, String mainImage, Category category, Shop shop, Customer customer, Brand brand, Set<ProductImage> images, List<ProductDetail> details, int reviewCount, float averageRating, boolean customerCanReview, boolean reviewedByCustomer) {
+		this.name = name;
+		this.alias = alias;
+		this.shortDescription = shortDescription;
+		this.fullDescription = fullDescription;
+		this.createdTime = createdTime;
+		this.updatedTime = updatedTime;
+		this.enabled = enabled;
+		this.inStock = inStock;
+		this.quantity = quantity;
+		this.cost = cost;
+		this.price = price;
+		this.discountPercent = discountPercent;
+		this.length = length;
+		this.width = width;
+		this.height = height;
+		this.weight = weight;
+		this.mainImage = mainImage;
+		this.category = category;
+		this.shop = shop;
+		this.customer = customer;
+		this.brand = brand;
+		this.images = images;
+		this.details = details;
+		this.reviewCount = reviewCount;
+		this.averageRating = averageRating;
+		this.customerCanReview = customerCanReview;
+		this.reviewedByCustomer = reviewedByCustomer;
+	}
+
+
+
+	public int getQuantity() {
+		return quantity;
+	}
+
+	public void setQuantity(int quantity) {
+		this.quantity = quantity;
+
+	}
+
 	public Customer getCustomer() {
 		return customer;
 	}

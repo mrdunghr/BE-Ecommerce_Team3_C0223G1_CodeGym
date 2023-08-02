@@ -1,7 +1,6 @@
 package com.team3.ecommerce.controller;
 
 import com.team3.ecommerce.entity.Category;
-import com.team3.ecommerce.entity.User;
 import com.team3.ecommerce.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

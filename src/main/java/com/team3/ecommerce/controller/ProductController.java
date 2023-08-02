@@ -16,7 +16,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -179,7 +178,7 @@ public class ProductController {
     @GetMapping("/customer-list/{customerId}")
     public Page<Product> getAllProductsByCustomerId(@PathVariable Integer customerId,
                                                     @RequestParam(defaultValue = "0") Integer page,
-                                                    @RequestParam(defaultValue = "10") Integer size) {
+                                                    @RequestParam(defaultValue = "4") Integer size) {
         return productService.getAllProductsByCustomerId(customerId, page, size);
     }
 
