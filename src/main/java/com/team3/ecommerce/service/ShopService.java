@@ -51,4 +51,8 @@ public class ShopService {
     public Iterable<Shop> findShopList(Customer customer) {
         return shopRepository.findShopByCustomer(customer);
     }
+
+    public void updateShopEnabledStatus(Integer id, boolean enabled){
+        shopRepository.updateEnabledStatus(id, enabled);
+    }
 }

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @RestController
@@ -139,5 +140,18 @@ public class ShopController {
         }
     }
 
+    @PutMapping("/{id}/enabled/{status}")
+    public ResponseEntity<String> updateUserEnabledStatus(@PathVariable("id") Integer id, @PathVariable("status") boolean enabled) {
+        try {
+            shopService.updateShopEnabledStatus(id, enabled);
+            String status = enabled ? "enabled" : "disabled";
+            String message = "The Shop ID " + id + " has been " + status;
+            return ResponseEntity.ok(message);
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 
 }
