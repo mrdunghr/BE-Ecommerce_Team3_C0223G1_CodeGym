@@ -61,6 +61,7 @@ public class CustomerController {
     public ResponseEntity<List<Country>> getCountryList() {
         return new ResponseEntity<>(customerService.listAllCountries(), HttpStatus.OK);
     }
+
     @PutMapping("/{id}/enabled/{status}")
     public ResponseEntity<String> updateUserEnabledStatus(@PathVariable("id") Integer id, @PathVariable("status") boolean enabled) {
         try {
@@ -83,6 +84,28 @@ public class CustomerController {
         }
         customerService.deleteCustomerById(id);
         return ResponseEntity.ok("Customer deleted successfully.");
+    }
+
+    // sửa thông tin customer
+    @PutMapping("update/{customerId}")
+    public ResponseEntity<?> updateCustomer(@PathVariable Integer customerId, @RequestBody Customer customer) {
+        Optional<Customer> customer1 = customerService.getCustomerById(customerId);
+        if (customer1.isPresent()) {
+            Customer customer2 = customer1.get();
+            customer2.setAddressLine1(customer.getAddressLine1());
+            customer2.setAddressLine2(customer.getAddressLine2());
+            customer2.setCity(customer.getCity());
+            customer2.setFirstName(customer.getFirstName());
+            customer2.setLastName(customer.getLastName());
+            customer2.setPhoneNumber(customer.getPhoneNumber());
+            customer2.setState(customer.getState());
+            customer2.setEmail(customer.getEmail());
+            customer2.setCountry(customer.getCountry());
+            return new ResponseEntity<>(customerService.saveCustomer(customer2),HttpStatus.OK);
+
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
 }
