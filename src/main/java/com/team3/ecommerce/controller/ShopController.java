@@ -43,7 +43,6 @@ public class ShopController {
     public ResponseEntity<?> createShop(@RequestBody Shop shop) {
         // Lấy thông tin khách hàng từ đối tượng Shop
         Customer customer = shop.getCustomer();
-
         // Kiểm tra xem người dùng đã có shop hay chưa
         List<Shop> existingShops = (List<Shop>) shopService.findShopList(customer);
         if (!existingShops.isEmpty()) {

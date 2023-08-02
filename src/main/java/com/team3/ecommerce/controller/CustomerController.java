@@ -88,6 +88,7 @@ public class CustomerController {
         return ResponseEntity.ok("Customer deleted successfully.");
     }
 
+
     // sửa thông tin customer
     @PutMapping("update/{customerId}")
     public ResponseEntity<?> updateCustomer(@PathVariable Integer customerId, @RequestBody Customer customer) {
