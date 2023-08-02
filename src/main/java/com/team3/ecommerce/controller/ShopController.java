@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @RestController
@@ -43,19 +44,23 @@ public class ShopController {
     public ResponseEntity<?> createShop(@RequestBody Shop shop) {
         // Lấy thông tin khách hàng từ đối tượng Shop
         Customer customer = shop.getCustomer();
-
+        // Kiểm tra xem người dùng đã có shop hay chưa
         List<Shop> existingShops = (List<Shop>) shopService.findShopList(customer);
         if (!existingShops.isEmpty()) {
             // Người dùng đã có shop, có thể hiển thị thông báo lỗi hoặc cơ hội chỉnh sửa shop hiện có
             return ResponseEntity.badRequest().body("You already have a shop.");
         }
+<<<<<<<<< Temporary merge branch 1
+
+=========
+>>>>>>>>> Temporary merge branch 2
         // Tạo đối tượng Shop mới
         Shop newShop = new Shop();
         newShop.setName(shop.getName());
         newShop.setAlias(shop.getAlias());
         newShop.setImage(shop.getImage());
         newShop.setDeliveryAddress(shop.getDeliveryAddress());
-        newShop.setEnabled(true);
+        newShop.setEnabled(false);
         newShop.setCreatedTime(new Date());
         newShop.setCustomer(customer);
 
@@ -137,5 +142,18 @@ public class ShopController {
         }
     }
 
+    @PutMapping("/{id}/enabled/{status}")
+    public ResponseEntity<String> updateUserEnabledStatus(@PathVariable("id") Integer id, @PathVariable("status") boolean enabled) {
+        try {
+            shopService.updateShopEnabledStatus(id, enabled);
+            String status = enabled ? "enabled" : "disabled";
+            String message = "The Shop ID " + id + " has been " + status;
+            return ResponseEntity.ok(message);
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 
 }

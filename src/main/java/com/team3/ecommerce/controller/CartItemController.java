@@ -2,6 +2,7 @@ package com.team3.ecommerce.controller;
 
 import com.team3.ecommerce.entity.CartItem;
 import com.team3.ecommerce.entity.Customer;
+import com.team3.ecommerce.entity.product.Product;
 import com.team3.ecommerce.service.CartItemService;
 import com.team3.ecommerce.service.CustomerService;
 import com.team3.ecommerce.service.ProductService;
@@ -23,14 +24,16 @@ public class CartItemController {
     private CustomerService customerService;
     @Autowired
     private ProductService productService;
+
     @GetMapping("/view/{id}")
-    public ResponseEntity<List<CartItem>> viewCart(@PathVariable Integer id){
+    public ResponseEntity<List<CartItem>> viewCart(@PathVariable Integer id) {
         if (id == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
         List<CartItem> cartItems = cartItemService.getCartItemByCustomerId(id);
         return ResponseEntity.ok(cartItems);
     }
+
     @PostMapping("/add/{customerId}")
     public ResponseEntity<CartItem> addToCart(@RequestBody CartItem cartItem, @PathVariable Integer customerId) {
         if (customerId == null) {
@@ -39,8 +42,13 @@ public class CartItemController {
         if (!productService.productIsExisted(cartItem.getProduct().getId())) {
             return ResponseEntity.notFound().build();
         }
-        if (!cartItem.getProduct().isEnabled()) {
+        if (!productService.findById(cartItem.getProduct().getId()).get().isEnabled()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+        // kiểm tra xem món hàng có thuộc quyền sở hữu của người mua hay không
+        Product product = productService.findById(cartItem.getProduct().getId()).get();
+        if (product.getCustomer().getId().equals(customerId)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
         // lấy danh sách các mặt hàng có trong giỏ hàng của khách hàng dựa vào customerId và productId
         List<CartItem> cartItems = cartItemService.cardItemRepository.findByCustomerId(customerId);
@@ -48,7 +56,7 @@ public class CartItemController {
             cartItem.setQuantity(1);
         }
         if (!cartItems.isEmpty()) {
-            for (CartItem item: cartItems) {
+            for (CartItem item : cartItems) {
                 if (item.getProduct().getId().equals(cartItem.getProduct().getId())) {
                     // nếu đã có sản phẩm thì tăng số lượng lên
                     item.setQuantity(item.getQuantity() + cartItem.getQuantity());
@@ -64,10 +72,11 @@ public class CartItemController {
         CartItem newCartItem = cartItemService.saveCartItem(cartItem);
         return ResponseEntity.ok(newCartItem);
     }
+
     @PutMapping("/update-quantities/{action}")
     public ResponseEntity<?> updateCartItemQuantities(@RequestBody CartItem cartItem, @PathVariable String action) {
 
-        switch (action){
+        switch (action) {
             case "increase":
                 cartItem.setQuantity(cartItem.getQuantity() + 1);
                 cartItemService.saveCartItem(cartItem);
@@ -80,40 +89,41 @@ public class CartItemController {
         return ResponseEntity.ok("Success!");
     }
 
-
-
     @PutMapping("/checked-item")
-    public ResponseEntity<?> checked(@RequestBody CartItem cartItem){
-        if (cartItem.isChecked() == true){
+    public ResponseEntity<?> checked(@RequestBody CartItem cartItem) {
+        if (cartItem.isChecked() == true) {
             cartItem.setChecked(false);
-        }else{
+        } else {
             cartItem.setChecked(true);
         }
         cartItemService.saveCartItem(cartItem);
         return ResponseEntity.ok("OK");
     }
-    // xóa sản phẩm khỏi giỏ hàng
-    @DeleteMapping("/{id_customer}/delete-product")
-    public ResponseEntity<List<CartItem>> deleteProduct(@PathVariable Integer id_customer,@RequestParam Integer productId) {
 
-        if (id_customer == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-        List<CartItem> cartItems = cartItemService.getCartItemByCustomerId(id_customer);
-        int productIndexToRemove = -1;
-        for (int i = 0; i < cartItems.size(); i++) {
-            if (cartItems.get(i).getProduct().getId().equals(productId)) {
-                productIndexToRemove = i;
+    @PutMapping("/checked-all-item/{checked}/{customerId}")
+    public ResponseEntity<?> checkedAll(@PathVariable String checked, @PathVariable Integer customerId) {
+        List<CartItem> list = cartItemService.getCartItemByCustomerId(customerId);
+        switch (checked) {
+            case "checked":
+                for (CartItem item : list) {
+                    item.setChecked(true);
+                }
+                cartItemService.saveAll(list);
                 break;
-            }
+            case "unchecked":
+                for (CartItem item : list) {
+                    item.setChecked(false);
+                }
+                cartItemService.saveAll(list);
+                break;
         }
-        if (productIndexToRemove != -1) {
-            cartItemService.deleteCartItem(cartItems.get(productIndexToRemove));
-            cartItems.remove(cartItems.get(productIndexToRemove));
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(cartItems);
-        }
-        return ResponseEntity.ok(cartItems);
+        return ResponseEntity.ok("OK");
     }
 
+    // xóa sản phẩm khỏi giỏ hàng
+    @DeleteMapping("/remove-item/{itemId}")
+    public ResponseEntity<?> removeItemfromCart(@PathVariable Integer itemId){
+        cartItemService.deleteCartItemById(itemId);
+        return ResponseEntity.ok("OK");
+    }
 }
