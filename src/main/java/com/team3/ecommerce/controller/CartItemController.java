@@ -89,7 +89,6 @@ public class CartItemController {
         return ResponseEntity.ok("Success!");
     }
 
-
     @PutMapping("/checked-item")
     public ResponseEntity<?> checked(@RequestBody CartItem cartItem) {
         if (cartItem.isChecked() == true) {
@@ -101,23 +100,30 @@ public class CartItemController {
         return ResponseEntity.ok("OK");
     }
 
+    @PutMapping("/checked-all-item/{checked}/{customerId}")
+    public ResponseEntity<?> checkedAll(@PathVariable String checked, @PathVariable Integer customerId) {
+        List<CartItem> list = cartItemService.getCartItemByCustomerId(customerId);
+        switch (checked) {
+            case "checked":
+                for (CartItem item : list) {
+                    item.setChecked(true);
+                }
+                cartItemService.saveAll(list);
+                break;
+            case "unchecked":
+                for (CartItem item : list) {
+                    item.setChecked(false);
+                }
+                cartItemService.saveAll(list);
+                break;
+        }
+        return ResponseEntity.ok("OK");
+    }
+
     // xóa sản phẩm khỏi giỏ hàng
-    @DeleteMapping("/delete-product/{id_cartItem}")
-    public ResponseEntity<String> deleteProduct(@PathVariable Integer id_cartItem) {
-        // Kiểm tra nếu id_cartItem không hợp lệ (null) thì trả về mã lỗi 400 Bad Request
-        if (id_cartItem == null) {
-            return ResponseEntity.badRequest().build();
-        }
-
-        // Kiểm tra xem cart item có tồn tại trong cartItemService hay không
-        if (!cartItemService.exists(id_cartItem)) {
-            // Nếu không tìm thấy cart item với id_cartItem, trả về mã lỗi 404 Not Found
-            return ResponseEntity.notFound().build();
-        }
-
-        // Xóa cart item dựa trên id_cartItem và cập nhật vào cartItemService
-        cartItemService.deleteCartItemById(id_cartItem);
-
-        return ResponseEntity.ok("Delete success");
+    @DeleteMapping("/remove-item/{itemId}")
+    public ResponseEntity<?> removeItemfromCart(@PathVariable Integer itemId){
+        cartItemService.deleteCartItemById(itemId);
+        return ResponseEntity.ok("OK");
     }
 }
