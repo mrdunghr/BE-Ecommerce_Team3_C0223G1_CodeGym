@@ -41,7 +41,6 @@ public class CustomerController {
         if (!isUnique) {
             return ResponseEntity.badRequest().body("Email already exists.");
         }
-
         customerService.registerCustomer(customer);
         return ResponseEntity.ok("Registration successful.");
     }
