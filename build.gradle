@@ -39,6 +39,9 @@ dependencies {
     implementation 'org.apache.poi:poi-ooxml:4.1.0' // file excel
     implementation 'org.springframework.boot:spring-boot-starter-mail' // send mail
     implementation 'com.twilio.sdk:twilio:9.2.5' // send sms
+
+//    implementation 'org.springframework.boot:spring-boot-starter-security' // security
+//    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client' // oauth2 đi kèm security
 }
 
 tasks.named('test') {

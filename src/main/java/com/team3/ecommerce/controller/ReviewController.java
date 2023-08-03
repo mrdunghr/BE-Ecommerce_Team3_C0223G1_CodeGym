@@ -12,14 +12,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
-@RequestMapping("/api/v1/reviews")
- @CrossOrigin("*")
+@CrossOrigin("*")
 @RestController
-public class ReviewController{
-@Autowired
+@RequestMapping("/api/v1/reviews")
+public class ReviewController {
+    @Autowired
     private ReviewService reviewService;
     @Autowired
     private ProductService productService;
@@ -34,19 +37,43 @@ public class ReviewController{
 
     @PostMapping("/{productId}/{customerId}/create")
     public ResponseEntity<?> createReview(@PathVariable Integer productId,
-                                          @RequestBody Review review,
+                                          @RequestBody ReviewRequest reviewRequest,
                                           @PathVariable Integer customerId) {
         Optional<Product> product= productService.findById(productId);
         Optional<Customer> customer =customerService.findById(customerId);
-        boolean customerReviewed = reviewService.didCustomerReviewProduct(customer.get(), product.get().getId());
-        if (customerReviewed) {
-            return ResponseEntity.badRequest().body("Customer has already reviewed this product.");
-        }
+        Review review = new Review();
+        review.setComment(reviewRequest.getComment());
+        review.setRating(reviewRequest.getRating());
         review.setProduct(product.get());
         review.setCustomer(customer.get());
-        reviewService.saveReview(review);
+        review.setReviewTime(new Date());
+        review.setHeadline(" ");
+
+        review = reviewService.savReview(review);
         return ResponseEntity.ok(review);
     }
 
+    @PostMapping("/comment")
+    public ResponseEntity<?> comment(@RequestBody Review review){
+        Product p = review.getProduct();
+        List<Review> reviews = (List<Review>) reviewService.getAllReviewsByProductId(p.getId());
+        review.setReviewTime(new Date());
+        if (reviews.isEmpty()){
+            p.setAverageRating(review.getRating());
+            reviewService.savReview(review);
+        }else {
+            int rating = review.getRating();
+            for (Review r : reviews) {
+                rating += r.getRating();
+            }
+            DecimalFormat df = new DecimalFormat("#.#");
+            float afterRate = Float.parseFloat(df.format(rating / reviews.size()));
+            p.setAverageRating(afterRate);
+            p.setReviewCount(p.getReviewCount() + 1);
+            productService.editProduct(p);
+            reviewService.savReview(review);
+        }
+        return ResponseEntity.ok(review);
+    }
 
 }
