@@ -47,13 +47,31 @@ public class CustomerController {
         return ResponseEntity.ok("Registration successful.");
     }
 
+    @GetMapping("/do-activation")
+    public ResponseEntity<String> activateUsers(@RequestParam String code) {
+        // Tìm người dùng bằng mã xác nhận và kích hoạt tài khoản (nếu chưa kích hoạt)
+        Customer customer = customerService.activateCustomer(code);
+
+        if (customer != null && customer.isEnabled()) {
+            String success = "Kích hoạt tài khoản thành công.";
+            return ResponseEntity.status(HttpStatus.OK).body(success);
+        } else {
+            String error = "Mã xác nhận không hợp lệ hoặc tài khoản đã được kích hoạt trước đó.";
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+        }
+    }
+
     @PostMapping("/login")
-    public ResponseEntity<Customer> LoginCustomer(@RequestBody Customer customer) {
+    public ResponseEntity<?> LoginCustomer(@RequestBody Customer customer) {
         Customer customerCheckLogin = customerService.findCustomerByEmail(customer.getEmail());
         if (customerCheckLogin != null && customerCheckLogin.getPassword().equals(customer.getPassword())) {
-            return ResponseEntity.ok().body(customerCheckLogin);
+            if (customerCheckLogin.isEnabled()) {
+                return ResponseEntity.ok().body(customerCheckLogin);
+            } else {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Account has not been activated");
+            }
         } else {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Wrong Account Or Password", HttpStatus.BAD_REQUEST);
         }
     }
 
