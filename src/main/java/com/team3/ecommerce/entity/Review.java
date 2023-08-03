@@ -35,7 +35,8 @@ public class Review extends IdBasedEntity {
 	
 	@Transient
 	private boolean downvotedByCurrentCustomer;
-	
+
+
 	public Review() { }
 	
 	public Review(Integer id) { this.id = id; }

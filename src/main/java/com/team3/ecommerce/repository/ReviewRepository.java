@@ -9,4 +9,6 @@ import java.util.List;
 @Repository
 public interface ReviewRepository extends JpaRepository<Review,Integer> {
     Iterable<Review> findAllByProduct_Id(Integer productId);
+
+
 }

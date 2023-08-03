@@ -12,7 +12,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @CrossOrigin("*")
@@ -47,9 +50,30 @@ public class ReviewController {
         review.setHeadline(" ");
 
         review = reviewService.savReview(review);
-
         return ResponseEntity.ok(review);
     }
 
+    @PostMapping("/comment")
+    public ResponseEntity<?> comment(@RequestBody Review review){
+        Product p = review.getProduct();
+        List<Review> reviews = (List<Review>) reviewService.getAllReviewsByProductId(p.getId());
+        review.setReviewTime(new Date());
+        if (reviews.isEmpty()){
+            p.setAverageRating(review.getRating());
+            reviewService.savReview(review);
+        }else {
+            int rating = review.getRating();
+            for (Review r : reviews) {
+                rating += r.getRating();
+            }
+            DecimalFormat df = new DecimalFormat("#.#");
+            float afterRate = Float.parseFloat(df.format(rating / reviews.size()));
+            p.setAverageRating(afterRate);
+            p.setReviewCount(p.getReviewCount() + 1);
+            productService.editProduct(p);
+            reviewService.savReview(review);
+        }
+        return ResponseEntity.ok(review);
+    }
 
 }

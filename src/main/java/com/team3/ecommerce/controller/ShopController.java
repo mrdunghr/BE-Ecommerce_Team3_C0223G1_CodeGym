@@ -136,6 +136,10 @@ public class ShopController {
             return ResponseEntity.badRequest().body("Account does not exist or is disabled");
         }
     }
-
+//    Lấy một shop bằng id của shop
+    @GetMapping("/get-shop/{id}")
+    public ResponseEntity<Shop> getShop(@PathVariable int id){
+        return ResponseEntity.ok(shopService.findByIdShop(id).get());
+    }
 
 }
