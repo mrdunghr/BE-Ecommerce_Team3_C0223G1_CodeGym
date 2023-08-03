@@ -15,11 +15,11 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Date;
 import java.util.Optional;
 
-@CrossOrigin("*")
-@RestController
 @RequestMapping("/api/v1/reviews")
-public class ReviewController {
-    @Autowired
+ @CrossOrigin("*")
+@RestController
+public class ReviewController{
+@Autowired
     private ReviewService reviewService;
     @Autowired
     private ProductService productService;
@@ -34,20 +34,17 @@ public class ReviewController {
 
     @PostMapping("/{productId}/{customerId}/create")
     public ResponseEntity<?> createReview(@PathVariable Integer productId,
-                                          @RequestBody ReviewRequest reviewRequest,
+                                          @RequestBody Review review,
                                           @PathVariable Integer customerId) {
         Optional<Product> product= productService.findById(productId);
         Optional<Customer> customer =customerService.findById(customerId);
-        Review review = new Review();
-        review.setComment(reviewRequest.getComment());
-        review.setRating(reviewRequest.getRating());
+        boolean customerReviewed = reviewService.didCustomerReviewProduct(customer.get(), product.get().getId());
+        if (customerReviewed) {
+            return ResponseEntity.badRequest().body("Customer has already reviewed this product.");
+        }
         review.setProduct(product.get());
         review.setCustomer(customer.get());
-        review.setReviewTime(new Date());
-        review.setHeadline(" ");
-
-        review = reviewService.savReview(review);
-
+        reviewService.saveReview(review);
         return ResponseEntity.ok(review);
     }
 
