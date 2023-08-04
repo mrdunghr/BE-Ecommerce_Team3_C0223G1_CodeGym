@@ -122,7 +122,8 @@ public class CustomerController {
             customer2.setState(customer.getState());
             customer2.setEmail(customer.getEmail());
             customer2.setCountry(customer.getCountry());
-            return new ResponseEntity<>(customerService.saveCustomer(customer2),HttpStatus.OK);
+            customerService.saveCustomer(customer2);
+            return new ResponseEntity<>(customer2,HttpStatus.OK);
 
         } else {
             return ResponseEntity.notFound().build();

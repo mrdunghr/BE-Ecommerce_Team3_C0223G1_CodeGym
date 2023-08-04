@@ -15,26 +15,11 @@ public class ReviewService {
 
     @Autowired
     private ReviewRepository reviewRepository;
-    @Autowired
-    private ProductRepository productRepo;
     public Iterable<Review> getAllReviewsByProductId(Integer productId) {
         return reviewRepository.findAllByProduct_Id(productId);
     }
 
-
-
-    public boolean didCustomerReviewProduct(Customer customer, Integer productId) {
-        Long count = reviewRepository.countByCustomerAndProduct(customer.getId(), productId);
-        return count > 0;
-    }
-
-
-    // tạo reviews mới
-    public Review saveReview(Review review) {
-        review.setReviewTime(new Date());
-        Review savedReview = reviewRepository.save(review);
-        Integer productId = savedReview.getProduct().getId();
-        productRepo.updateReviewCountAndAverageRating(productId);// cập nhập lại product
-        return savedReview;
+    public Review savReview(Review review){
+        return reviewRepository.save(review);
     }
 }

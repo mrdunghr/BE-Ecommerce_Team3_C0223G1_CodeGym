@@ -60,9 +60,5 @@ public interface ProductRepository extends JpaRepository<Product,Integer> {
     // lấy 3 sản pẩm mới nhất
     Iterable<Product> findTop3ByOrderByIdDesc();
 
-   @Query("UPDATE Product p SET p.averageRating = COALESCE((SELECT AVG(r.rating) FROM Review r WHERE r.product.id = ?1), 0),"
-	+ " p.reviewCount = (SELECT COUNT(r.id) FROM Review r WHERE r.product.id =?1) "
-	+ "WHERE p.id = ?1")
-@Modifying
- void updateReviewCountAndAverageRating(Integer productId);
+
 }
