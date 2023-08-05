@@ -163,7 +163,7 @@ public class ProductController {
     // hiển thị 5 sản phẩm bán chạy nhất
     @GetMapping("/list-product-discount")
     public ResponseEntity<Iterable<Product>> listProduct() {
-        Iterable<Product> products = productService.findTop5ByOrderByDiscountPercent();
+        Iterable<Product> products = productService.findTop6ByOrderByDiscountPercent();
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
