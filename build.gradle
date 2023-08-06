@@ -40,6 +40,9 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-mail' // send mail
     implementation 'com.twilio.sdk:twilio:9.2.5' // send sms
 
+    implementation 'org.springframework.boot:spring-boot-starter-websocket'// websocket
+    implementation group: 'org.webjars', name: 'stomp-websocket', version: '2.3.3'
+
 //    implementation 'org.springframework.boot:spring-boot-starter-security' // security
 //    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client' // oauth2 đi kèm security
 }
