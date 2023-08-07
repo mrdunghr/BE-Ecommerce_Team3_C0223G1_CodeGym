@@ -163,4 +163,10 @@ public class ProductService {
     public List<Product> showProductByCustomer(Integer customerId) {
         return iProductRepository.findByCustomerId(customerId);
     }
+
+    // lâ 3 sản phẩm mới nhất của danh mục
+    public List<Product> getLatestProductsByCategory(Category category) {
+        return iProductRepository.findTop3ByCategoryOrderByCreatedTimeDesc(category);
+    }
+
 }

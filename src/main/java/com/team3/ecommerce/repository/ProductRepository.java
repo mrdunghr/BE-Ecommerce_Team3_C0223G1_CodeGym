@@ -60,5 +60,10 @@ public interface ProductRepository extends JpaRepository<Product,Integer> {
     // lấy 3 sản pẩm mới nhất
     Iterable<Product> findTop3ByOrderByIdDesc();
 
+    // lấy 3 sản phẩm mới nhất của danh mục
+        List<Product> findTop3ByCategoryOrderByCreatedTimeDesc(Category category);
+
+
+
 
 }

@@ -250,4 +250,12 @@ public class ProductController {
         return new ResponseEntity<>(listProducts,HttpStatus.OK);
     }
 
+    // 3 sản phẩm mới nhất của 1 danh mục
+    @GetMapping("/latest/category/{categoryId}")
+    public ResponseEntity<?> findTop3ByCategory(@PathVariable Integer categoryId){
+        Optional<Category> category1 = categoryService.findCategoryById(categoryId);
+        Iterable<Product> listProducts = productService.getLatestProductsByCategory(category1.get());
+        return new ResponseEntity<>(listProducts,HttpStatus.OK);
+    }
+
 }
