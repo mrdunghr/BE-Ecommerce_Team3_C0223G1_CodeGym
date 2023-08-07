@@ -1,5 +1,4 @@
 package com.team3.ecommerce.controller;
-
 import com.team3.ecommerce.entity.CartItem;
 import com.team3.ecommerce.entity.Customer;
 import com.team3.ecommerce.entity.product.Product;
@@ -10,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @CrossOrigin

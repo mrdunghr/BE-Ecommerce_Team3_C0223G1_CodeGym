@@ -7,6 +7,7 @@ import com.team3.ecommerce.entity.product.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -35,7 +36,7 @@ public interface ProductRepository extends JpaRepository<Product,Integer> {
                                                           @Param("brand")Brand brand,Pageable pageable);
 
 
-    Iterable<Product> findTop5ByOrderByDiscountPercentDesc();
+    Iterable<Product> findTop6ByOrderByDiscountPercentDesc();
 
     // hiển thị danh sách product của customer
     Page<Product> findByCustomerId(Integer customerId, Pageable pageable);
@@ -58,4 +59,11 @@ public interface ProductRepository extends JpaRepository<Product,Integer> {
 
     // lấy 3 sản pẩm mới nhất
     Iterable<Product> findTop3ByOrderByIdDesc();
+
+    // lấy 3 sản phẩm mới nhất của danh mục
+        List<Product> findTop3ByCategoryOrderByCreatedTimeDesc(Category category);
+
+
+
+
 }
