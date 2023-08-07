@@ -163,7 +163,7 @@ public class ProductController {
     // hiển thị 5 sản phẩm bán chạy nhất
     @GetMapping("/list-product-discount")
     public ResponseEntity<Iterable<Product>> listProduct() {
-        Iterable<Product> products = productService.findTop5ByOrderByDiscountPercent();
+        Iterable<Product> products = productService.findTop6ByOrderByDiscountPercent();
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
@@ -247,6 +247,14 @@ public class ProductController {
         if(!listProducts.iterator().hasNext()){
             return ResponseEntity.notFound().build();
         }
+        return new ResponseEntity<>(listProducts,HttpStatus.OK);
+    }
+
+    // 3 sản phẩm mới nhất của 1 danh mục
+    @GetMapping("/latest/category/{categoryId}")
+    public ResponseEntity<?> findTop3ByCategory(@PathVariable Integer categoryId){
+        Optional<Category> category1 = categoryService.findCategoryById(categoryId);
+        Iterable<Product> listProducts = productService.getLatestProductsByCategory(category1.get());
         return new ResponseEntity<>(listProducts,HttpStatus.OK);
     }
 
