@@ -67,6 +67,16 @@ public class OrderDetail extends IdBasedEntity {
 	@JoinColumn(name = "order_id")
 	private Order order;
 
+	private boolean hasReviewed = false;
+
+	public boolean isHasReviewed() {
+		return hasReviewed;
+	}
+
+	public void setHasReviewed(boolean hasReviewed) {
+		this.hasReviewed = hasReviewed;
+	}
+
 	public OrderDetail(Customer customer) {
 		this.customer = customer;
 	}

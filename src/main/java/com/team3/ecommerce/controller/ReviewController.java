@@ -3,8 +3,10 @@ package com.team3.ecommerce.controller;
 import com.team3.ecommerce.entity.Customer;
 import com.team3.ecommerce.entity.Review;
 import com.team3.ecommerce.entity.ReviewRequest;
+import com.team3.ecommerce.entity.order.OrderDetail;
 import com.team3.ecommerce.entity.product.Product;
 import com.team3.ecommerce.service.CustomerService;
+import com.team3.ecommerce.service.OrderDetailsService;
 import com.team3.ecommerce.service.ProductService;
 import com.team3.ecommerce.service.ReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,9 @@ public class ReviewController {
     private ProductService productService;
     @Autowired
     private CustomerService customerService;
+
+    @Autowired
+    private OrderDetailsService orderDetailsService;
 
     @GetMapping("/{productId}")
     public ResponseEntity<?> getAllReviewsByProductId(@PathVariable Integer productId) {
@@ -53,8 +58,9 @@ public class ReviewController {
         return ResponseEntity.ok(review);
     }
 
-    @PostMapping("/comment")
-    public ResponseEntity<?> comment(@RequestBody Review review){
+    @PostMapping("/comment/{orderDetailsId}")
+    public ResponseEntity<?> comment(@RequestBody Review review, @PathVariable Integer orderDetailsId){
+        OrderDetail orderDetail = orderDetailsService.getOrderById(orderDetailsId);
         Product p = review.getProduct();
         List<Review> reviews = (List<Review>) reviewService.getAllReviewsByProductId(p.getId());
         review.setReviewTime(new Date());
@@ -70,6 +76,8 @@ public class ReviewController {
             float afterRate = Float.parseFloat(df.format(rating / reviews.size()));
             p.setAverageRating(afterRate);
             p.setReviewCount(p.getReviewCount() + 1);
+            orderDetail.setHasReviewed(true);
+            orderDetailsService.saveOrder(orderDetail);
             productService.editProduct(p);
             reviewService.savReview(review);
         }
