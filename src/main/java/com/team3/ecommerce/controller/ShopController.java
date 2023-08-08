@@ -122,7 +122,7 @@ public class ShopController {
     @GetMapping("/{customer_id}")
     public ResponseEntity<?> findShopByCustomer(@PathVariable Integer customer_id,
                                                 @RequestParam(defaultValue = "0") int page,
-                                                @RequestParam(defaultValue = "5") int size,
+                                                @RequestParam(defaultValue = "3") int size,
                                                 @RequestParam(defaultValue = "false") boolean list) {
         Customer customer = customerService.getCustomerById(customer_id).orElse(null);
         if (customer != null && customer.isEnabled()) {
