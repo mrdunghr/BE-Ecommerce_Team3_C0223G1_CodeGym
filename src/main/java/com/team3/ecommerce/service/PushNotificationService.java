@@ -41,4 +41,7 @@ public class PushNotificationService {
         return Flux.interval(Duration.ofSeconds(1)).map(sequence -> ServerSentEvent.<List<Notification>>builder()
                 .id(String.valueOf(sequence)).event("user-list-event").data(new ArrayList<>()).build());
     }
+    public List<Notification> getCustomerNotify(Integer id){
+        return notificationStorageRepository.findNotificationByCustomerToId(id);
+    }
 }
