@@ -2,6 +2,8 @@ package com.team3.ecommerce.service;
 
 import com.team3.ecommerce.entity.CartItem;
 import com.team3.ecommerce.entity.Customer;
+import com.team3.ecommerce.entity.Notification;
+import com.team3.ecommerce.entity.NotificationType;
 import com.team3.ecommerce.entity.order.*;
 import com.team3.ecommerce.repository.OrderDetailsRepository;
 import com.team3.ecommerce.repository.OrderRepository;
@@ -22,6 +24,8 @@ public class OrderDetailsService {
     private CartItemService cartItemService;
     @Autowired
     private CustomerService customerService;
+    @Autowired
+    private NotificationStorageService notificationStorageService;
 
     public Order createOrder(int id) throws Exception{
         Customer customer =customerService.getCustomerById(id).get();
@@ -42,8 +46,13 @@ public class OrderDetailsService {
                 orderDetail.setCustomer(item.getCustomer());
                 orderDetail.setStatus(OrderStatus.NEW);
                 cartItemService.deleteCartItem(item);
-            }else if(item.isChecked() && !item.getProduct().isEnabled()){
-                throw new Exception("The product is disable!");
+                // Tạo thông báo
+                notificationStorageService.createNotificationStorage(Notification.builder()
+                        .delivered(false)
+                        .content("Đơn hàng mới từ: " + customer.getFullName())
+                        .notificationType(NotificationType.NEW)
+                        .customerFrom(customer)
+                        .customerTo(item.getProduct().getCustomer()).build());
             }
         }
 //        order.setOrderDetails(orderDetailSet);
